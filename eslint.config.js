@@ -58,29 +58,15 @@ export default [
       },
     },
     rules: {
-      // Правило для пустых строк до и после функций
+      // Правило для пустых строк до и после функций - ИСПРАВЛЕННАЯ ВЕРСИЯ
       'padding-line-between-statements': [
         'error',
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'function',
-        },
-        {
-          blankLine: 'always',
-          prev: 'function',
-          next: '*',
-        },
-        {
-          blankLine: 'any',
-          prev: 'function',
-          next: 'function',
-        },
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'export',
-        },
+        { blankLine: 'always', prev: '*', next: 'function' },
+        { blankLine: 'always', prev: 'function', next: '*' },
+        { blankLine: 'any', prev: 'function', next: 'function' },
+        { blankLine: 'always', prev: '*', next: 'export' },
+        { blankLine: 'always', prev: 'export', next: '*' },
+        { blankLine: 'any', prev: 'export', next: 'export' },
       ],
 
       // Правила для порядка импортов
@@ -88,12 +74,12 @@ export default [
         'error',
         {
           groups: [
-            'builtin',    // Встроенные модули
-            'external',   // Внешние пакеты
-            'internal',   // Внутренние пути
-            'parent',     // Родительские каталоги
-            'sibling',    // Файлы в той же директории
-            'index',      // index файлы
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
           ],
           'newlines-between': 'always',
           alphabetize: {
@@ -126,7 +112,7 @@ export default [
       ],
 
       // Предупреждение о неиспользуемых переменных
-      'no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['off'],
     },
   },
   
@@ -138,7 +124,7 @@ export default [
       'dist/',
       'build/',
       '*.min.js',
-      '**/.*', // Игнорировать dotfiles (новое требование flat config)
+      '**/.*',
     ],
   },
 ];

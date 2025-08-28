@@ -1,5 +1,3 @@
-
-
 const defaultNotes = {
     topics: [
         {
@@ -33,87 +31,100 @@ const defaultNotes = {
     ]
 }
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState, useEffect } from 'react';
-function useNotesStorage(init) {
-    const [notesStorage, setNotesStorage] = useState(init)
+
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+export function useTopics(init = []) {
+    const [topics, setTopics] = useState(init)
 
     useEffect(() => {
-        getNotesStorage().then(setNotesStorage)
+        getNotes().then(n => {
+            console.log('n', n)
+            setTopics(n.topics)
+        })
     }, [])
 
-    return [notesStorage, setNotesStorage]
+    function createTopic(topicName) {
+        const newTopic = {
+            id: Date.now(),
+            name: topicName,
+            notes: []
+        }
+        setTopics(topics.concat(newTopic))
+    }
+
+    function deleteTopic(topicId) {
+        setTopics(topics.filter(topic => topic.id !== topicId))
+    }
+
+    function renameTopic(topicId, newName) {
+        setTopics(topics.reduce(topic => topic.id == topicId ? { ...topic, name: newName } : topic, []))
+    }
+
+
+    return { topics, setTopics, createTopic, deleteTopic, renameTopic }
 }
 
-function useTopics() {
-    const [notes, setNotesStorage] = useState({})
-    const [topics, setTopics] = useState([])
+export function useNotes(topicId = 0) {
+    const [topics, setTopics] = useTopics()
+    const [topic, setTopic] = useState({ id: 0, name: 'no topic', notes: [] })
+    const [notes, setNotes] = useState([])
 
     useEffect(() => {
-        getNotes().then(n => setTopics(n.topics))
-    }, [notesStorage])
-
-    useEffect(() => {
-        setNotesStorage({ topics: topics })
+        const topic = topics.filter(n => n.id === topicId)[0]
+        setTopic(topic)
+        setNotes(topic.notes)
     }, [topics])
 
-    return [topics, setTopics]
-}
-function useTopics() {
-    const [notesStorage, setNotesStorage] = useState({})
-    const [topics, setTopics] = useState([])
-
     useEffect(() => {
-        getNotes().then(n => setTopics(n.topics))
-    }, [notesStorage])
+        const newTopic = { ...topic, notes }
+        setTopic(newTopic)
+        setTopics([...topics, newTopic])
+    }, [notes])
 
-    useEffect(() => {
-        setNotesStorage({ topics: topics })
-    }, [topics])
+    function createNote(noteText) {
+        const newNote = {
+            text: noteText,
+            id: Date.now(),
+            date: Date.now(),
+        }
+        setNotes(notes.concat(newNote))
+    }
 
-    return [topics, setTopics]
+    function deleteNote(noteId) {
+        setNotes(notes.filter(note => note.id !== noteId))
+    }
+
+    return {
+        notes,
+        setNotes,
+        createNote,
+        deleteNote
+    }
 }
-
 
 async function getNotes() {
     try {
-        const notes = JSON.parse(AsyncStorage.getItem('notes'))
+        let notes = await AsyncStorage.getItem('notes')
+        console.log('notes', notes)
+        notes = JSON.parse(notes)
         console.log('got notes!')
         return notes
     } catch (e) {
         console.error('an error occured during getting notes: ', e)
+        return []
     }
-    return await JSON.parse(AsyncStorage.getItem('notes'))
 }
-async function saveNotes(notes) {
+export async function saveNotes(notes) {
     try {
         const json = JSON.stringify(notes)
-        await AsyncStorage.setItem('notes', json)
-        console.log('notes successfully saved!')
+        AsyncStorage.removeItem('notes').then(() =>
+            {AsyncStorage.setItem('notes', json)
+            }
+        )
+        
     } catch (e) {
         console.error('an error occured during saving notes: ', e)
     }
-}
-
-function createTopic(topicName) {
-    const [topics, setTopics] = useTopics({})
-    const newTopic = {
-        id: Date.now(),
-        name: topicName,
-        notes: []
-    }
-    setTopics(topics.concat(newTopic))
-}
-function deleteTopic(topicId) {
-    const [topics, setTopics] = useTopics({})
-    setTopics(topics.filter(topic => topic.id !== topicId))
-}
-function renameTopic(topicId, newName) {
-    const [topics, setTopics] = useTopics({})
-
-    setTopics(topics.reduce(topic => topic.id == topicId ? { ...topic, name: newName } : topic, []))
-}
-
-function createNote(topic, noteText) {
-
 }
