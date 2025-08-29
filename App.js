@@ -1,9 +1,16 @@
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-const defaultNotes = {
+
+
+import { StatusBar } from 'expo-status-bar';
+import { useTopics, useNotes, saveNotes } from './hooks/useNotes';
+import { useEffect, useState } from 'react';
+
+export default function App() {
+  const defaultNotes = {
   topics: [
     {
       id: 1,
-      name: 'ceducation',
+      name: 'education',
       notes: [
         {
           text: 'first: common education',
@@ -16,7 +23,7 @@ const defaultNotes = {
       ]
     },
     {
-      id: 1,
+      id: 2,
       name: 'work',
       notes: [
         {
@@ -31,12 +38,6 @@ const defaultNotes = {
     }
   ]
 }
-
-import { StatusBar } from 'expo-status-bar';
-import { useTopics, useNotes, saveNotes } from './hooks/useNotes';
-import { useEffect, useState } from 'react';
-
-export default function App() {
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
   // const {
   //   notes,
@@ -53,9 +54,16 @@ export default function App() {
     <View style={styles.container}>
       <Text></Text>
       {topics.map(topic => (<>
+      <View>
         <Text key={topic.id + 'id'}>id: {topic.id}</Text>
         <Text key={topic.id + 'name'}> name: {topic.name}</Text>
         <Text key={topic.id + 'notes'}> notes: {JSON.stringify(topic.notes)}</Text>
+        <Button
+         key={topic.id + 'del'}
+        title="delete topic"
+        onPress={() => deleteTopic(topic.id)}></Button>
+      </View>
+        
       </>
       ))}
       <TextInput
@@ -64,7 +72,8 @@ export default function App() {
         onChangeText={setNewTopicName}
         defaultValue='enter sth'></TextInput>
         <Button
-        onPress={createTopic(newTopicName)}></Button>
+        title="create topic"
+        onPress={() => newTopicName && createTopic(newTopicName)}></Button>
       <StatusBar style="auto" />
     </View>
   );

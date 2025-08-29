@@ -55,7 +55,16 @@ export function useTopics(init = []) {
     }
 
     function deleteTopic(topicId) {
-        setTopics(topics.filter(topic => topic.id !== topicId))
+                console.log('deleting id:', topicId)
+
+        setTopics(topics.filter(topic => 
+            
+            
+            {
+                console.log('topic:', topic)
+                return topic.id !== topicId
+            
+    }))
     }
 
     function renameTopic(topicId, newName) {
