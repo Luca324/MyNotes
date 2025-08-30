@@ -11,7 +11,8 @@ module.exports = function(api) {
           alias: {
             '@': './src',
             '@database': './src/database',
-            '@components': './src/components'
+            '@components': './src/components',
+            '@utils': './src/utils'
           }
         }
       ]
