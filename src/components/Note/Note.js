@@ -4,7 +4,7 @@ import { formatDate } from '@utils/sharedUtils';
 
 
 export default function Note({ note }) {
-    console.log('note', note)
+    // console.log('note', note)
     return (
         <View style={styles.note}>
             <View style={styles.header}>

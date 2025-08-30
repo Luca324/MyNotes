@@ -61,8 +61,8 @@ export function useNotes(topicId = 0) {
 
     function createNote(text, topicId) {
         const newNote = {
-            text: text,
-            date: Date.now(),
+            name: text,
+            created_at: Date.now(),
         }
         createNoteDB(text, topicId).then(res => {
             console.log('res of creating note', res)
