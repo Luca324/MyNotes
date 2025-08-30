@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
 
 import { StatusBar } from 'expo-status-bar';
-import { useTopics, useNotes, saveNotes } from './hooks/useNotes';
+import { useTopics, useNotes, saveNotes } from './src/hooks/useNotes';
 import { useEffect, useState } from 'react';
 
 export default function App() {
