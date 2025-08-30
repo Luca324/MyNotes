@@ -1,19 +1,26 @@
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
-
-
 import { useEffect, useState } from 'react';
+
+import { StyleSheet, Text, View, Button } from 'react-native';
+
 import { getChildrenForTopic } from '@database/databaseService';
+
+import { useNotes } from '../../hooks/useNotes';
+import TextInput from '../../shared/TextInput';
 import Note from '../Note/Note';
 
 export default function Topic({topic, deleteTopic}) {
-    const { id, name, notes } = topic
+    const { id, name } = topic
     const [children, setChildren] = useState([])
-    useEffect(() => {
-    try {
+    const [newNoteText, setNewNoteText] = useState('')
+      const { notes, setNotes, createNote, deleteNote } = useNotes(id)
+    
+    // useEffect(() => {
+    // try {
     // getChildrenForTopic(id).then(setChildren)
-    } catch (e) {}
+    // сейчас это делается в useNotes. это пока нет subtopics. потом надо будет что-то думать
+    // } catch (e) {}
 
-    }, [])
+    // }, [])
 
 return (
     <View style={styles.topic}>
@@ -32,16 +39,21 @@ return (
                 />
                 <Button
                     style={styles.btn}
-                    title="add to navbar"
-                    onPress={() => {}}
+                    title="add note"
+                    onPress={() => createNote(newNoteText, id)}
                     color="#007AFF"
                 />
             </View>
+                <TextInput
+                value={newNoteText}
+                onChangeText={setNewNoteText}
+                ></TextInput>
         </View>
         <View>{children}</View>
     </View>
 );
 }
+
 const styles = StyleSheet.create({
     topic: {
         backgroundColor: '#ffffff',

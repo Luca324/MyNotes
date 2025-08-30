@@ -48,23 +48,23 @@ export const getChildTopics = async (parentTopicId) => {
 };
 
 // NOTES
-export const createNote = async (topicId, title, content, orderIndex = 0) => {
+export const createNote = async (content, topicId, orderIndex = 0) => {
   const query = `
-    INSERT INTO notes (topic_id, title, content, order_index)
-    VALUES (?, ?, ?, ?);
+    INSERT INTO notes (content, topic_id, order_index)
+    VALUES (?, ?, ?);
   `;
-  const result = await executeQuery(query, [topicId, title, content, orderIndex]);
+  const result = await executeQuery(query, [content, topicId, orderIndex]);
   return result.lastInsertRowId;
 };
 
-// Получаем ВСЕ записи для темы (и подтемы, и заметки) и сортируем по order_index
+// Получаем ВСЕ записи для темы (и подтемы, и заметки) и сортируем по order_index. поле content заметки переименовывается в name
 export const getChildrenForTopic = async (topicId) => {
   const query = `
     SELECT id, name, 'topic' as type, order_index, created_at
     FROM topics
     WHERE parent_id = ?
     UNION ALL
-    SELECT id, title as name, content, 'note' as type, order_index, created_at
+    SELECT id, content, 'note' as type, order_index, created_at
     FROM notes
     WHERE topic_id = ?
     ORDER BY order_index ASC;

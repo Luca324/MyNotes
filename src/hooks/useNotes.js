@@ -1,6 +1,7 @@
-import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB } from '../database/databaseService';
-
 import { useState, useEffect } from 'react';
+
+import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getChildrenForTopic } from '../database/databaseService';
+
 
 
 export function useTopics(init = []) {
@@ -17,7 +18,6 @@ export function useTopics(init = []) {
 
     function createTopic(topicName) {
         const newTopic = {
-            id: Date.now(),
             name: topicName,
             notes: []
         }
@@ -49,33 +49,33 @@ export function useTopics(init = []) {
 }
 
 export function useNotes(topicId = 0) {
-    const [topics, setTopics] = useTopics()
-    const [topic, setTopic] = useState({ id: 0, name: 'no topic', notes: [] })
     const [notes, setNotes] = useState([])
 
     useEffect(() => {
-        const topic = topics.filter(n => n.id === topicId)[0]
-        setTopic(topic)
-        setNotes(topic.notes)
-    }, [topics])
+        getChildrenForTopic(topicId).then(res => {
+            setNotes(res) // тут должен быть запрос к бд на получение всех дочерних элементов темы
 
-    useEffect(() => {
-        const newTopic = { ...topic, notes }
-        setTopic(newTopic)
-        setTopics([...topics, newTopic])
-    }, [notes])
+        })
+    }, [topicId])
 
-    function createNote(noteText) {
+
+    function createNote(text, topicId) {
         const newNote = {
-            text: noteText,
-            id: Date.now(),
+            text: text,
             date: Date.now(),
         }
-        setNotes(notes.concat(newNote))
+        createNoteDB(text, topicId).then(res => {
+            console.log('res of creating note', res)
+            setNotes(notes.concat(newNote))
+        })
     }
 
     function deleteNote(noteId) {
-        setNotes(notes.filter(note => note.id !== noteId))
+        deleteNoteDB(noteId).then(res => {
+            console.log('res of deleting note', res)
+            setNotes(notes.filter(note => note.id !== noteId))
+
+        })
     }
 
     return {

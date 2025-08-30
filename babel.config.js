@@ -12,7 +12,8 @@ module.exports = function(api) {
             '@': './src',
             '@database': './src/database',
             '@components': './src/components',
-            '@utils': './src/utils'
+            '@utils': './src/utils',
+            '@shared': './src/shared'
           }
         }
       ]

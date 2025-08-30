@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+
 import { formatDate } from '@utils/sharedUtils';
 
 
@@ -8,12 +9,13 @@ export default function Note({ note }) {
         <View style={styles.note}>
             <View style={styles.header}>
                 <Text style={styles.id}>id: {note.id}</Text>
-                <Text style={styles.id}>{formatDate(note.date)}</Text>
+                <Text style={styles.id}>{formatDate(note.created_at)}</Text>
             </View>
-            <Text>{note.text}</Text>
+            <Text>{note.name}</Text>
         </View>
     )
 }
+
 const styles = StyleSheet.create({
     note: {
         width: "100%",

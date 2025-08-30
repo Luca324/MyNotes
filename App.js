@@ -1,10 +1,15 @@
-import { StyleSheet, Text, View, Button, TextInput, ScrollView } from 'react-native';
+import { useEffect, useState } from 'react';
+
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 
 
 import { StatusBar } from 'expo-status-bar';
-import { useTopics, useNotes } from './src/hooks/useNotes';
-import { useEffect, useState } from 'react';
+
+import TextInput from '@shared/TextInput';
+
 import Topic from './src/components/Topic/Topic';
+import { useTopics, useNotes } from './src/hooks/useNotes';
+
 
 export default function App() {
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
@@ -16,8 +21,7 @@ export default function App() {
       <TextInput
         style={styles.input}
         value={newTopicName}
-        onChangeText={setNewTopicName}
-        defaultValue='enter sth'></TextInput>
+        onChangeText={setNewTopicName}></TextInput>
       <Button
         title="create topic"
         onPress={() => newTopicName && createTopic(newTopicName)}></Button>
@@ -48,12 +52,5 @@ const styles = StyleSheet.create({
   scroll: {
     width: "95%",
 
-  },
-  input: {
-    height: 40,
-    margin: 12,
-    width: '100%',
-    borderWidth: 1,
-    padding: 10,
-  },
+  }
 });
