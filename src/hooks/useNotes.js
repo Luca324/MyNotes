@@ -33,7 +33,6 @@ const defaultNotes = {
 
 import { useState, useEffect } from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function useTopics(init = []) {
     const [topics, setTopics] = useState(init)
@@ -55,16 +54,13 @@ export function useTopics(init = []) {
     }
 
     function deleteTopic(topicId) {
-                console.log('deleting id:', topicId)
+        console.log('deleting id:', topicId)
 
-        setTopics(topics.filter(topic => 
-            
-            
-            {
-                console.log('topic:', topic)
-                return topic.id !== topicId
-            
-    }))
+        setTopics(topics.filter(topic => {
+            console.log('topic:', topic)
+            return topic.id !== topicId
+
+        }))
     }
 
     function renameTopic(topicId, newName) {
@@ -115,9 +111,38 @@ export function useNotes(topicId = 0) {
 
 async function getNotes() {
     try {
-        let notes = await AsyncStorage.getItem('notes')
-        console.log('notes', notes)
-        notes = JSON.parse(notes)
+        let notes = {
+            topics: [
+                {
+                    id: 1,
+                    name: 'education',
+                    notes: [
+                        {
+                            text: 'first: common education',
+                            date: Date.now()
+                        },
+                        {
+                            text: 'second: high education',
+                            date: Date.now()
+                        }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: 'work',
+                    notes: [
+                        {
+                            text: 'nobody likes it',
+                            date: Date.now()
+                        },
+                        {
+                            text: 'but everybody does',
+                            date: Date.now()
+                        }
+                    ]
+                }
+            ]
+        }
         console.log('got notes!')
         return notes
     } catch (e) {
@@ -125,15 +150,15 @@ async function getNotes() {
         return []
     }
 }
-export async function saveNotes(notes) {
-    try {
-        const json = JSON.stringify(notes)
-        AsyncStorage.removeItem('notes').then(() =>
-            {AsyncStorage.setItem('notes', json)
-            }
-        )
-        
-    } catch (e) {
-        console.error('an error occured during saving notes: ', e)
-    }
-}
+// export async function saveNotes(notes) {
+//     try {
+//         const json = JSON.stringify(notes)
+//         AsyncStorage.removeItem('notes').then(() => {
+//             AsyncStorage.setItem('notes', json)
+//         }
+//         )
+
+//     } catch (e) {
+//         console.error('an error occured during saving notes: ', e)
+//     }
+// }

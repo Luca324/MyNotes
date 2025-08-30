@@ -2,8 +2,9 @@ import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
 
 import { StatusBar } from 'expo-status-bar';
-import { useTopics, useNotes, saveNotes } from './src/hooks/useNotes';
+import { useTopics, useNotes } from './src/hooks/useNotes';
 import { useEffect, useState } from 'react';
+import Topic from './src/components/Topic/Topic';
 
 export default function App() {
   const defaultNotes = {
@@ -39,30 +40,13 @@ export default function App() {
   ]
 }
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
-  // const {
-  //   notes,
-  //   setNotes,
-  //   createNote,
-  //   deleteNote
-  // } = useNotes()
   const [newTopicName, setNewTopicName] = useState('')
-  useEffect(() => {
-    saveNotes(defaultNotes)
-  }, [])
 
   return (
     <View style={styles.container}>
       <Text></Text>
       {topics.map(topic => (<>
-      <View>
-        <Text key={topic.id + 'id'}>id: {topic.id}</Text>
-        <Text key={topic.id + 'name'}> name: {topic.name}</Text>
-        <Text key={topic.id + 'notes'}> notes: {JSON.stringify(topic.notes)}</Text>
-        <Button
-         key={topic.id + 'del'}
-        title="delete topic"
-        onPress={() => deleteTopic(topic.id)}></Button>
-      </View>
+      <Topic topic={topic}/>
         
       </>
       ))}
