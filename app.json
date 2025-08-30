@@ -24,13 +24,19 @@
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE"
-      ]
+      ],
+      "package": "com.tatyana000.MyHabits"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-sqlite"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "62cc4c6e-8495-4936-b0df-437cff8ea91e"
+      }
+    }
   }
 }
