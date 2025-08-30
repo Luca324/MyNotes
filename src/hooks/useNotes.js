@@ -1,35 +1,4 @@
-const defaultNotes = {
-    topics: [
-        {
-            id: 1,
-            name: 'current home',
-            notes: [
-                {
-                    text: 'room has to always be clean',
-                    date: Date.now()
-                },
-                {
-                    text: 'things close to me',
-                    date: Date.now()
-                }
-            ]
-        },
-        {
-            id: 1,
-            name: 'future home',
-            notes: [
-                {
-                    text: 'close to the metro',
-                    date: Date.now()
-                },
-                {
-                    text: 'hmm.... it has to be light! more sun!',
-                    date: Date.now()
-                }
-            ]
-        }
-    ]
-}
+import { createTopic as createTopicDB } from '../database/databaseService';
 
 import { useState, useEffect } from 'react';
 
@@ -50,7 +19,12 @@ export function useTopics(init = []) {
             name: topicName,
             notes: []
         }
-        setTopics(topics.concat(newTopic))
+        createTopicDB(topicName).then(res => {
+            console.log('res of creating topic', res)
+            setTopics(topics.concat(newTopic))
+
+        })
+
     }
 
     function deleteTopic(topicId) {

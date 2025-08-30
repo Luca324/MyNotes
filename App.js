@@ -7,38 +7,6 @@ import { useEffect, useState } from 'react';
 import Topic from './src/components/Topic/Topic';
 
 export default function App() {
-  const defaultNotes = {
-  topics: [
-    {
-      id: 1,
-      name: 'education',
-      notes: [
-        {
-          text: 'first: common education',
-          date: Date.now()
-        },
-        {
-          text: 'second: high education',
-          date: Date.now()
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: 'work',
-      notes: [
-        {
-          text: 'nobody likes it',
-          date: Date.now()
-        },
-        {
-          text: 'but everybody does',
-          date: Date.now()
-        }
-      ]
-    }
-  ]
-}
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
   const [newTopicName, setNewTopicName] = useState('')
 
