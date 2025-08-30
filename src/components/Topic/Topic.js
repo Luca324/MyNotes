@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Button, ButtonText } from '@/components/ui/button';
 
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { getChildrenForTopic } from '@database/databaseService';
 
@@ -8,12 +9,12 @@ import { useNotes } from '../../hooks/useNotes';
 import TextInput from '../../shared/TextInput';
 import Note from '../Note/Note';
 
-export default function Topic({topic, deleteTopic}) {
+export default function Topic({ topic, deleteTopic }) {
     const { id, name } = topic
     const [children, setChildren] = useState([])
     const [newNoteText, setNewNoteText] = useState('')
-      const { notes, setNotes, createNote, deleteNote } = useNotes(id)
-    
+    const { notes, setNotes, createNote, deleteNote } = useNotes(id)
+
     // useEffect(() => {
     // try {
     // getChildrenForTopic(id).then(setChildren)
@@ -22,36 +23,30 @@ export default function Topic({topic, deleteTopic}) {
 
     // }, [])
 
-return (
-    <View style={styles.topic}>
-        <View style={styles.topicHeader}>
-            <Text style={styles.idText}>id: {id}</Text>
-            <Text style={styles.nameText}>name: {name}</Text>
-            {notes && notes.map(note => (
-                <Note note={note} key={note.id}/>
-            ))}
-            <View style={styles.buttonContainer}>
-                <Button
-                    style={styles.btn}
-                    title="delete topic"
-                    onPress={() => deleteTopic(id)}
-                    color="#FF3B30"
-                />
-                <Button
-                    style={styles.btn}
-                    title="add note"
-                    onPress={() => createNote(newNoteText, id)}
-                    color="#007AFF"
-                />
-            </View>
+    return (
+        <View style={styles.topic}>
+            <View style={styles.topicHeader}>
+                <Text style={styles.idText}>id: {id}</Text>
+                <Text style={styles.nameText}>name: {name}</Text>
+                {notes && notes.map(note => (
+                    <Note note={note} key={note.id} />
+                ))}
+                <View style={styles.buttonContainer}>
+                    <Button variant="solid" size="md" action="negative" onPress={() => deleteTopic(id)}>
+                        <ButtonText>delete topic</ButtonText>
+                    </Button>
+                    <Button variant="solid" size="md" action="positive" onPress={() => createNote(newNoteText, id)}>
+                        <ButtonText>add note</ButtonText>
+                    </Button>
+                </View>
                 <TextInput
-                value={newNoteText}
-                onChangeText={setNewNoteText}
+                    value={newNoteText}
+                    onChangeText={setNewNoteText}
                 ></TextInput>
+            </View>
+            <View>{children}</View>
         </View>
-        <View>{children}</View>
-    </View>
-);
+    );
 }
 
 const styles = StyleSheet.create({
