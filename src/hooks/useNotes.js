@@ -1,4 +1,4 @@
-import { createTopic as createTopicDB } from '../database/databaseService';
+import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB } from '../database/databaseService';
 
 import { useState, useEffect } from 'react';
 
@@ -9,7 +9,9 @@ export function useTopics(init = []) {
     useEffect(() => {
         getNotes().then(n => {
             console.log('n', n)
-            setTopics(n.topics)
+            console.log('n', typeof n)
+            n.map(el => console.log(el))
+            setTopics(n)
         })
     }, [])
 
@@ -29,12 +31,13 @@ export function useTopics(init = []) {
 
     function deleteTopic(topicId) {
         console.log('deleting id:', topicId)
+        deleteTopicDB(topicId).then(res => {
+            console.log('res of deleting topic', res)
+            setTopics(topics.filter(topic => {
+                return topic.id !== topicId
+            }))
+        })
 
-        setTopics(topics.filter(topic => {
-            console.log('topic:', topic)
-            return topic.id !== topicId
-
-        }))
     }
 
     function renameTopic(topicId, newName) {
@@ -85,38 +88,7 @@ export function useNotes(topicId = 0) {
 
 async function getNotes() {
     try {
-        let notes = {
-            topics: [
-                {
-                    id: 1,
-                    name: 'education',
-                    notes: [
-                        {
-                            text: 'first: common education',
-                            date: Date.now()
-                        },
-                        {
-                            text: 'second: high education',
-                            date: Date.now()
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    name: 'work',
-                    notes: [
-                        {
-                            text: 'nobody likes it',
-                            date: Date.now()
-                        },
-                        {
-                            text: 'but everybody does',
-                            date: Date.now()
-                        }
-                    ]
-                }
-            ]
-        }
+        let notes = await getTopTopics()
         console.log('got notes!')
         return notes
     } catch (e) {
@@ -136,3 +108,36 @@ async function getNotes() {
 //         console.error('an error occured during saving notes: ', e)
 //     }
 // }
+
+const defaultNotes = {
+    topics: [
+        {
+            id: 1,
+            name: 'education',
+            notes: [
+                {
+                    text: 'first: common education',
+                    date: Date.now()
+                },
+                {
+                    text: 'second: high education',
+                    date: Date.now()
+                }
+            ]
+        },
+        {
+            id: 2,
+            name: 'work',
+            notes: [
+                {
+                    text: 'nobody likes it',
+                    date: Date.now()
+                },
+                {
+                    text: 'but everybody does',
+                    date: Date.now()
+                }
+            ]
+        }
+    ]
+}

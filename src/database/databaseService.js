@@ -28,6 +28,16 @@ export const createTopic = async (name, parentId = null, orderIndex = 0) => {
   return result.lastInsertRowId; // В expo-sqlite используется lastInsertRowId вместо insertId
 };
 
+export const getTopTopics = async () => {
+  const query = `
+    SELECT * FROM topics
+    WHERE parent_id IS ?
+    ORDER BY order_index ASC;
+  `;
+  return await executeQuery(query, [null]);
+};
+
+
 export const getChildTopics = async (parentTopicId) => {
   const query = `
     SELECT * FROM topics

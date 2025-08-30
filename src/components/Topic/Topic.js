@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { getChildrenForTopic } from '@database/databaseService';
 import Note from '../Note/Note';
 
-export default function Topic({topic}) {
+export default function Topic({topic, deleteTopic}) {
     const { id, name, notes } = topic
     const [children, setChildren] = useState([])
     useEffect(() => {
@@ -20,7 +20,7 @@ return (
         <View style={styles.topicHeader}>
             <Text style={styles.idText}>id: {id}</Text>
             <Text style={styles.nameText}>name: {name}</Text>
-            {notes.map(note => (
+            {notes && notes.map(note => (
                 <Note note={note} key={note.id}/>
             ))}
             <View style={styles.buttonContainer}>
@@ -44,7 +44,6 @@ return (
 }
 const styles = StyleSheet.create({
     topic: {
-        width: "95%",
         backgroundColor: '#ffffff',
         borderRadius: 12,
         marginVertical: 2,
