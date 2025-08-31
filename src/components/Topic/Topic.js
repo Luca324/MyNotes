@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
+
 import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
-import { Trash } from '../Icons/Trash';
-import { AddCircle } from '../Icons/AddCircle';
+
 import { getChildrenForTopic } from '@database/databaseService';
 import Animated, {
     useAnimatedStyle,
@@ -10,11 +9,14 @@ import Animated, {
     useSharedValue,
     withTiming,
 } from 'react-native-reanimated';
+import Svg, { Path } from 'react-native-svg';
 
 
 import { useNotes } from '../../hooks/useNotes';
 import TextInput from '../../shared/TextInput';
 import { Accordion, AccordionItem, App } from '../Accordion/Accordion';
+import { AddCircle } from '../Icons/AddCircle';
+import { Trash } from '../Icons/Trash';
 import Note from '../Note/Note';
 
 export default function Topic({ topic, deleteTopic }) {

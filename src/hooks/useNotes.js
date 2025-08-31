@@ -23,8 +23,7 @@ export function useTopics(init = []) {
         }
         createTopicDB(topicName).then(res => {
             console.log('res of creating topic', res)
-            setTopics(topics.concat(newTopic))
-
+            setTopics(topics.concat({...newTopic, id: res}))
         })
 
     }
