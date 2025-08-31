@@ -65,7 +65,7 @@ export function useNotes(topicId = 0) {
         }
         createNoteDB(text, topicId).then(res => {
             console.log('res of creating note', res)
-            setNotes(notes.concat(newNote))
+            setNotes(notes.concat({...newNote, id: res}))
         })
     }
 

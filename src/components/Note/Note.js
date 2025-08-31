@@ -1,15 +1,19 @@
-import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, Pressable } from 'react-native';
 
 import { formatDate } from '@utils/sharedUtils';
 
+import { Trash } from '../Icons/Trash';
 
-export default function Note({ note }) {
+export default function Note({ note, deleteNote }) {
     // console.log('note', note)
     return (
         <View style={styles.note}>
             <View style={styles.header}>
                 <Text style={styles.id}>id: {note.id}</Text>
                 <Text style={styles.id}>{formatDate(note.created_at)}</Text>
+                <Pressable onPress={() => deleteNote(note.id)} style={styles.btn}>
+                    <Trash />
+                </Pressable>
             </View>
             <Text>{note.name}</Text>
         </View>

@@ -52,7 +52,7 @@ export default function Topic({ topic, deleteTopic }) {
 
             <AccordionItem isExpanded={open} viewKey="Accordion">
                 {notes && notes.map(note => (
-                    <Note note={note} key={note.id} />
+                    <Note note={note} deleteNote={deleteNote} key={note.id} />
                 ))}
                 <View style={styles.inputContainer}>
                     <TextInput
