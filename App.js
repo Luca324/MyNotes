@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 
-import { Button, ButtonText } from '@/components/ui/button';
+
 import { StatusBar } from 'expo-status-bar';
 
 import TextInput from '@shared/TextInput';
 
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 
-import Topic from '@src/components/Topic/Topic';
-import { useTopics, useNotes } from '@src/hooks/useNotes';
+import Topic from './src/components/Topic/Topic';
+import { useTopics, useNotes } from './src/hooks/useNotes';
 
 
-import './global.css';
+import '@/global.css';
 
 export default function App() {
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
@@ -28,10 +28,10 @@ export default function App() {
           style={styles.input}
           value={newTopicName}
           onChangeText={setNewTopicName}></TextInput>
-
-        <Button variant="outline" size="md" action="primary" onPress={() => newTopicName && createTopic(newTopicName)}>
-          <ButtonText>create topic</ButtonText>
-        </Button>
+        <Button
+          title="create topic"
+          onPress={() => newTopicName && createTopic(newTopicName
+          )}></Button>
         <ScrollView style={styles.scroll}>
           {topics && Array.isArray(topics) ? (
             topics.map(topic => (
