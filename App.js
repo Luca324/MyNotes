@@ -7,13 +7,9 @@ import { StatusBar } from 'expo-status-bar';
 
 import TextInput from '@shared/TextInput';
 
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
-
 import Topic from './src/components/Topic/Topic';
 import { useTopics, useNotes } from './src/hooks/useNotes';
 
-
-import '@/global.css';
 
 export default function App() {
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
@@ -21,30 +17,26 @@ export default function App() {
 
 
   return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        value={newTopicName}
+        onChangeText={setNewTopicName}></TextInput>
+      <Button
+        title="create topic"
+        onPress={() => newTopicName && createTopic(newTopicName)}></Button>
+      <ScrollView style={styles.scroll}>
+        {topics && Array.isArray(topics) ? (
+          topics.map(topic => (
+            <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} />
+          ))
+        ) : (
+          <Text>Загрузка...</Text>
+        )}
+      </ScrollView>
 
-    <GluestackUIProvider mode="light">
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          value={newTopicName}
-          onChangeText={setNewTopicName}></TextInput>
-        <Button
-          title="create topic"
-          onPress={() => newTopicName && createTopic(newTopicName
-          )}></Button>
-        <ScrollView style={styles.scroll}>
-          {topics && Array.isArray(topics) ? (
-            topics.map(topic => (
-              <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} />
-            ))
-          ) : (
-            <Text>Загрузка...</Text>
-          )}
-        </ScrollView>
-
-        <StatusBar style="auto" />
-      </View>
-    </GluestackUIProvider>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
