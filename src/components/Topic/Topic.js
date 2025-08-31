@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 
-import { StyleSheet, Text, View, Button } from 'react-native';
-
+import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
 
 import { getChildrenForTopic } from '@database/databaseService';
+import Animated, {
+    useAnimatedStyle,
+    useDerivedValue,
+    useSharedValue,
+    withTiming,
+} from 'react-native-reanimated';
+
 
 import { useNotes } from '../../hooks/useNotes';
 import TextInput from '../../shared/TextInput';
+import { Accordion, AccordionItem, App } from '../Accordion/Accordion';
 import Note from '../Note/Note';
 
 export default function Topic({ topic, deleteTopic }) {
@@ -14,6 +21,10 @@ export default function Topic({ topic, deleteTopic }) {
     const [children, setChildren] = useState([])
     const [newNoteText, setNewNoteText] = useState('')
     const { notes, setNotes, createNote, deleteNote } = useNotes(id)
+    const open = useSharedValue(false);
+    const onPress = () => {
+        open.value = !open.value;
+    };
 
     // useEffect(() => {
     // try {
@@ -25,14 +36,18 @@ export default function Topic({ topic, deleteTopic }) {
 
     return (
         <View style={styles.topic}>
-            <View style={styles.topicHeader}>
-                <Text style={styles.idText}>id: {id}</Text>
-                <Text style={styles.nameText}>name: {name}</Text>
-                {notes && notes.map(note => (
-                    <Note note={note} key={note.id} />
-                ))}
-                <View style={styles.buttonContainer}>
 
+            <View style={styles.topicHeader}>
+                <Pressable onPress={onPress}>
+                    <Text style={styles.idText}>id: {id}</Text>
+                    <Text style={styles.nameText}>name: {name}</Text>
+                </Pressable>
+
+                <AccordionItem isExpanded={open} viewKey="Accordion">
+                    {notes && notes.map(note => (
+                        <Note note={note} key={note.id} />
+                    ))}
+                    <View style={styles.buttonContainer}>
                     <Button
                         style={styles.btn}
                         variant="negative"
@@ -50,8 +65,8 @@ export default function Topic({ topic, deleteTopic }) {
                     value={newNoteText}
                     onChangeText={setNewNoteText}
                 ></TextInput>
+                </AccordionItem>
             </View>
-            <View>{children}</View>
         </View>
     );
 }
@@ -73,21 +88,16 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     topicHeader: {
-        marginBottom: 12,
-        borderBottomWidth: 1,
-        borderBottomColor: '#f0f0f0',
-        paddingBottom: 12,
+        marginBottom: 2,
     },
     idText: {
         fontSize: 14,
         color: '#666',
-        marginBottom: 4,
     },
     nameText: {
         fontSize: 18,
         fontWeight: '600',
         color: '#333',
-        marginBottom: 12,
     },
     btn: {
         marginVertical: 8,
