@@ -1,19 +1,9 @@
 import { StyleSheet, TextInput as Input} from 'react-native';
 
-export default function TextInput({value, onChangeText, defaultValue = ''}) {
+export default function TextInput({value, onChangeText, styles, defaultValue = ''}) {
     return (<Input
-            style={styles.input}
+            style={styles}
             value={value}
             onChangeText={onChangeText}
             defaultValue={defaultValue}></Input>)
 }
-
-const styles = StyleSheet.create({
-  input: {
-    height: 40,
-    margin: 12,
-    width: '100%',
-    borderWidth: 1,
-    padding: 10,
-  },
-});

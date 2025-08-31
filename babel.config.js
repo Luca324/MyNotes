@@ -13,6 +13,7 @@ module.exports = function(api) {
             '@database': './src/database',
             '@components': './src/components',
             '@utils': './src/utils',
+            '@assets': './assets',
             '@shared': './src/shared'
           }
         }

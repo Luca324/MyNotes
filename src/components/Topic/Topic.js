@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-
-import { StyleSheet, Text, View, Button, Pressable } from 'react-native';
-
+import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
+import { Trash } from '../Icons/Trash';
+import { AddCircle } from '../Icons/AddCircle';
 import { getChildrenForTopic } from '@database/databaseService';
 import Animated, {
     useAnimatedStyle,
@@ -37,36 +38,32 @@ export default function Topic({ topic, deleteTopic }) {
     return (
         <View style={styles.topic}>
 
-            <View style={styles.topicHeader}>
-                <Pressable onPress={onPress}>
+            <Pressable onPress={onPress} style={styles.topicHeader}>
+                <Text style={styles.nameText}>{name}</Text>
+                <View style={styles.horizontal}>
                     <Text style={styles.idText}>id: {id}</Text>
-                    <Text style={styles.nameText}>name: {name}</Text>
-                </Pressable>
-
-                <AccordionItem isExpanded={open} viewKey="Accordion">
-                    {notes && notes.map(note => (
-                        <Note note={note} key={note.id} />
-                    ))}
-                    <View style={styles.buttonContainer}>
-                    <Button
-                        style={styles.btn}
-                        variant="negative"
-                        title="delete topic"
-                        onPress={() => deleteTopic(id)}
-                    />
-                    <Button
-                        style={styles.btn}
-                        title="add note"
-                        onPress={() => createNote(newNoteText, id)}
-                        color="#007AFF"
-                    />
+                    <Pressable onPress={() => deleteTopic(id)} style={styles.btn}>
+                        <Trash />
+                    </Pressable>
                 </View>
-                <TextInput
-                    value={newNoteText}
-                    onChangeText={setNewNoteText}
-                ></TextInput>
-                </AccordionItem>
-            </View>
+            </Pressable>
+
+            <AccordionItem isExpanded={open} viewKey="Accordion">
+                {notes && notes.map(note => (
+                    <Note note={note} key={note.id} />
+                ))}
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        value={newNoteText}
+                        onChangeText={setNewNoteText}
+                        styles={styles.input}
+                    ></TextInput>
+                    <Pressable onPress={() => createNote(newNoteText, id)} style={styles.addNote}>
+                        <AddCircle />
+                    </Pressable>
+
+                </View>
+            </AccordionItem>
         </View>
     );
 }
@@ -77,7 +74,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         marginVertical: 2,
         marginHorizontal: 2,
-        padding: 16,
+        padding: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -87,8 +84,12 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
+
     topicHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         marginBottom: 2,
+        gap: 8,
     },
     idText: {
         fontSize: 14,
@@ -99,15 +100,30 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         color: '#333',
     },
-    btn: {
-        marginVertical: 8,
-        borderRadius: 8,
-        backgroundColor: '#007AFF',
-    },
-    buttonContainer: {
+    inputContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 8,
-        gap: 8,
+        gap: 0,
     },
+    addNote: {
+        width: 10,
+        color: 'black',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    input: {
+        margin: 12,
+        padding: 10,
+        width: '85%',
+        backgroundColor: '#F4F4F4',
+        borderWidth: 0,
+        borderRadius: 4,
+        height: 35,
+    },
+    horizontal: {
+        flexDirection: 'row',
+        gap: 8,
+    }
 });

@@ -18,13 +18,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        value={newTopicName}
-        onChangeText={setNewTopicName}></TextInput>
-      <Button
-        title="create topic"
-        onPress={() => newTopicName && createTopic(newTopicName)}></Button>
+     
       <ScrollView style={styles.scroll}>
         {topics && Array.isArray(topics) ? (
           topics.map(topic => (
@@ -34,7 +28,12 @@ export default function App() {
           <Text>Загрузка...</Text>
         )}
       </ScrollView>
-
+      <TextInput
+        value={newTopicName}
+        onChangeText={setNewTopicName}></TextInput>
+      <Button
+        title="create topic"
+        onPress={() => newTopicName && createTopic(newTopicName)}></Button>
       <StatusBar style="auto" />
     </View>
   );
@@ -44,13 +43,13 @@ const styles = StyleSheet.create({
   container: {
 
     marginTop: 25,
+    marginBottom: 25,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
   scroll: {
-    width: "95%",
-
+    width: "100%",
   }
 });
