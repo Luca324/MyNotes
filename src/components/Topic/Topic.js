@@ -3,31 +3,17 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
 
 
-import { getChildrenForTopic } from '@database/databaseService';
 import Animated, {
-    useAnimatedStyle,
-    useDerivedValue,
     useSharedValue,
-    withTiming,
 } from 'react-native-reanimated';
-import Svg, { Path } from 'react-native-svg';
-
 
 import { Accordion, AccordionItem, App } from '@/components/Accordion/Accordion';
-import { AddCircle } from '@/components/Icons/AddCircle';
 import { Trash } from '@/components/Icons/Trash';
-import Note from '@/components/Note/Note';
-import { useTopics, useNotes } from '@/hooks/useNotes';
-import TextInput from '@/shared/TextInput';
-
-import { WriteANote } from '../Icons/WriteANote';
+import TopicContent from '@/components/TopicContent/TopicContent';
 
 
 export default function Topic({ topic, deleteTopic }) {
     const { id, name } = topic
-    const [newNoteText, setNewNoteText] = useState('')
-    const { notes, setNotes, createNote, deleteNote } = useNotes(id)
-    const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
 
     const open = useSharedValue(false);
     const onPress = () => {
@@ -48,25 +34,7 @@ export default function Topic({ topic, deleteTopic }) {
             </Pressable>
 
             <AccordionItem isExpanded={open} viewKey="Accordion">
-                {subtopics && subtopics.map(subtopic => (
-                    <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
-                ))}
-                {notes && notes.map(note => (
-                    <Note note={note} deleteNote={deleteNote} key={note.id} />
-                ))}
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        value={newNoteText}
-                        onChangeText={setNewNoteText}
-                        styles={styles.input}
-                    ></TextInput>
-                    <Pressable onPress={() => createNote(newNoteText, id)} style={styles.addNote}>
-                        <WriteANote />
-                    </Pressable>
-                    <Pressable onPress={() => createSubtopic(newNoteText, id)} style={styles.addNote}>
-                        <AddCircle />
-                    </Pressable>
-                </View>
+                <TopicContent topic={topic} deleteTopic={deleteTopic} />
             </AccordionItem>
         </View>
     );
