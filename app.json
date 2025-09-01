@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyHabits",
-    "slug": "MyHabits",
+    "name": "MyNotes",
+    "slug": "MyNotes",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,7 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.tatyana000.MyHabits"
+      "package": "com.tatyana000.MyNotes"
     },
     "web": {
       "favicon": "./assets/favicon.png"
