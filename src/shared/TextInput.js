@@ -1,11 +1,14 @@
-import { StyleSheet, TextInput as Input} from 'react-native';
+import { StyleSheet, TextInput as Input } from 'react-native';
 
-export default function TextInput({value, onChangeText, styles = defaultStyles.input, defaultValue = ''}) {
-    return (<Input
-            style={styles}
-            value={value}
-            onChangeText={onChangeText}
-            defaultValue={defaultValue}></Input>)
+export default function TextInput({ value, onChangeText, styles = defaultStyles.input, defaultValue = '' }) {
+  return (
+    <Input
+    multiline={true}
+      style={styles}
+      value={value}
+      onChangeText={onChangeText}
+      defaultValue={defaultValue}>
+    </Input>)
 }
 
 const defaultStyles = StyleSheet.create({
@@ -17,5 +20,5 @@ const defaultStyles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 4,
     height: 35,
-},
+  },
 });
