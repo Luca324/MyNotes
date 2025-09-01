@@ -57,6 +57,15 @@ export const createNote = async (content, topicId, orderIndex = 0) => {
   return result.lastInsertRowId;
 };
 
+export const getNotesForTopic = async (parentTopicId) => {
+  const query = `
+    SELECT * FROM notes
+    WHERE topic_id IS ?
+    ORDER BY order_index ASC;
+  `;
+  return await executeQuery(query, [parentTopicId]);
+}
+
 // Получаем ВСЕ записи для темы (и подтемы, и заметки) и сортируем по order_index. поле content заметки переименовывается в name
 export const getChildrenForTopic = async (topicId) => {
   const query = `

@@ -5,10 +5,10 @@ import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
 
 import { StatusBar } from 'expo-status-bar';
 
+import Topic from '@components/Topic/Topic';
 import TextInput from '@shared/TextInput';
 
-import Topic from './src/components/Topic/Topic';
-import { useTopics, useNotes } from './src/hooks/useNotes';
+import { useTopics, useNotes } from '@/hooks/useNotes';
 
 
 export default function App() {

@@ -1,30 +1,40 @@
 import { useState, useEffect } from 'react';
 
-import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getChildrenForTopic } from '../database/databaseService';
+import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getChildrenForTopic, getNotesForTopic, getChildTopics } from '../database/databaseService';
 
 
 
-export function useTopics(init = []) {
+export function useTopics(parentTopicId = null, init = []) {
     const [topics, setTopics] = useState(init)
 
     useEffect(() => {
-        getNotes().then(n => {
-            console.log('n', n)
-            console.log('n', typeof n)
-            n.map(el => console.log(el))
+        if (!parentTopicId) {
+            getNotes().then(n => {
             setTopics(n)
         })
-    }, [])
+    } else {
+        getChildTopics(parentTopicId).then(n => {
+            setTopics(n)
+        })
+    }
+    }, [parentTopicId])
 
-    function createTopic(topicName) {
+    useEffect(() => {
+       console.log('topics')
+        topics.forEach(t => console.log(t))
+    }, [topics])
+
+    function createTopic(topicName, parentId = null, orderIndex = 0) {
         const newTopic = {
             name: topicName,
             notes: []
         }
-        createTopicDB(topicName).then(res => {
+        createTopicDB(topicName, parentId, orderIndex).then(res => {
             console.log('res of creating topic', res)
+            console.log('parentId', parentId, 'newTopicsList', topics.concat({...newTopic, id: res}))
             setTopics(topics.concat({...newTopic, id: res}))
         })
+
 
     }
 
@@ -51,9 +61,8 @@ export function useNotes(topicId = 0) {
     const [notes, setNotes] = useState([])
 
     useEffect(() => {
-        getChildrenForTopic(topicId).then(res => {
-            setNotes(res) // тут должен быть запрос к бд на получение всех дочерних элементов темы
-
+        getNotesForTopic(topicId).then(res => {
+            setNotes(res)
         })
     }, [topicId])
 

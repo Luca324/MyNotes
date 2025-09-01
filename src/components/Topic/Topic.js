@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
 
+
 import { getChildrenForTopic } from '@database/databaseService';
 import Animated, {
     useAnimatedStyle,
@@ -12,30 +13,26 @@ import Animated, {
 import Svg, { Path } from 'react-native-svg';
 
 
-import { useNotes } from '../../hooks/useNotes';
-import TextInput from '../../shared/TextInput';
-import { Accordion, AccordionItem, App } from '../Accordion/Accordion';
-import { AddCircle } from '../Icons/AddCircle';
-import { Trash } from '../Icons/Trash';
-import Note from '../Note/Note';
+import { Accordion, AccordionItem, App } from '@/components/Accordion/Accordion';
+import { AddCircle } from '@/components/Icons/AddCircle';
+import { Trash } from '@/components/Icons/Trash';
+import Note from '@/components/Note/Note';
+import { useTopics, useNotes } from '@/hooks/useNotes';
+import TextInput from '@/shared/TextInput';
+
+import { WriteANote } from '../Icons/WriteANote';
+
 
 export default function Topic({ topic, deleteTopic }) {
     const { id, name } = topic
-    const [children, setChildren] = useState([])
     const [newNoteText, setNewNoteText] = useState('')
     const { notes, setNotes, createNote, deleteNote } = useNotes(id)
+    const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
+
     const open = useSharedValue(false);
     const onPress = () => {
         open.value = !open.value;
     };
-
-    // useEffect(() => {
-    // try {
-    // getChildrenForTopic(id).then(setChildren)
-    // сейчас это делается в useNotes. это пока нет subtopics. потом надо будет что-то думать
-    // } catch (e) {}
-
-    // }, [])
 
     return (
         <View style={styles.topic}>
@@ -51,6 +48,9 @@ export default function Topic({ topic, deleteTopic }) {
             </Pressable>
 
             <AccordionItem isExpanded={open} viewKey="Accordion">
+                {subtopics && subtopics.map(subtopic => (
+                    <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
+                ))}
                 {notes && notes.map(note => (
                     <Note note={note} deleteNote={deleteNote} key={note.id} />
                 ))}
@@ -61,9 +61,11 @@ export default function Topic({ topic, deleteTopic }) {
                         styles={styles.input}
                     ></TextInput>
                     <Pressable onPress={() => createNote(newNoteText, id)} style={styles.addNote}>
+                        <WriteANote />
+                    </Pressable>
+                    <Pressable onPress={() => createSubtopic(newNoteText, id)} style={styles.addNote}>
                         <AddCircle />
                     </Pressable>
-
                 </View>
             </AccordionItem>
         </View>
@@ -72,6 +74,7 @@ export default function Topic({ topic, deleteTopic }) {
 
 const styles = StyleSheet.create({
     topic: {
+        width: '100%',
         backgroundColor: '#ffffff',
         borderRadius: 12,
         marginVertical: 2,
@@ -106,10 +109,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: 8,
-        gap: 0,
+        gap: 8,
     },
     addNote: {
-        width: 10,
+        width: 24,
         color: 'black',
         display: 'flex',
         alignItems: 'center',
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
     input: {
         margin: 12,
         padding: 10,
-        width: '85%',
+        width: '70%',
         backgroundColor: '#F4F4F4',
         borderWidth: 0,
         borderRadius: 4,
