@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import importPlugin from 'eslint-plugin-import';
+import unusedImportsPlugin from 'eslint-plugin-unused-imports';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
@@ -9,7 +10,7 @@ import tsPlugin from '@typescript-eslint/eslint-plugin';
 export default [
   // Базовые рекомендованные правила ESLint
   js.configs.recommended,
-  
+
   // Конфигурация для TypeScript файлов
   {
     files: ['**/*.{ts,tsx}'],
@@ -39,14 +40,11 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       // Отключаем правило о любом типа
       '@typescript-eslint/no-explicit-any': 'off',
-      // Правило для неиспользуемых переменных - используем TypeScript версию
-      '@typescript-eslint/no-unused-vars': ['warn', { 
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      }],
+      // Отключаем стандартное правило
+      '@typescript-eslint/no-unused-vars': 'off',
     },
   },
-  
+
   // Рекомендованные правила для React (для всех файлов)
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -72,7 +70,7 @@ export default [
       },
     },
   },
-  
+
   // Рекомендованные правила для React Hooks
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -81,7 +79,7 @@ export default [
     },
     rules: reactHooksPlugin.configs.recommended.rules,
   },
-  
+
   // Основная конфигурация для JavaScript файлов
   {
     files: ['**/*.{js,jsx}'],
@@ -95,18 +93,28 @@ export default [
       },
     },
     rules: {
-      'no-unused-vars': ['warn', { 
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      }],
+      // Удаляем стандартные правила no-unused-vars
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+
+      // Добавляем правила из плагина unused-imports
+      'unused-imports/no-unused-imports': 'error',
+      // 'unused-imports/no-unused-vars': [
+      //   'error',
+      //   {
+      //     argsIgnorePattern: '^_',
+      //     varsIgnorePattern: '^_',
+      //   }
+      // ],
     },
   },
-  
+
   // Общие правила для импортов (для всех файлов)
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       import: importPlugin,
+      'unused-imports': unusedImportsPlugin,
     },
     rules: {
       // Правило для пустых строк до и после функций
@@ -163,7 +171,7 @@ export default [
       ],
     },
   },
-  
+
   // Игнорируемые файлы
   {
     ignores: [

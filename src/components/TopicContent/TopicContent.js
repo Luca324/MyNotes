@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-
-import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
+import { useState } from 'react';
 
 
-import Animated, {
+import { StyleSheet, View, Pressable } from 'react-native';
+
+
+import {
     useSharedValue,
 } from 'react-native-reanimated';
 
 import { AddCircle } from '@/components/Icons/AddCircle';
-import { Trash } from '@/components/Icons/Trash';
 import Note from '@/components/Note/Note';
 import Topic from '@/components/Topic/Topic';
 import { useTopics, useNotes } from '@/hooks/useNotes';
