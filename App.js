@@ -13,6 +13,8 @@ import TextInput from '@shared/TextInput';
 
 import { useTopics, useNotes } from '@/hooks/useNotes';
 
+import { getAllTabs } from './src/database/databaseService';
+
 
 export default function App() {
   const keyboard = useKeyboard();
@@ -29,7 +31,15 @@ export default function App() {
 
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
   const [newTopicName, setNewTopicName] = useState('')
+const [allTabs, setAllTabs] = useState([])
+useEffect(() => {
+  getAllTabs().then(setAllTabs)
+}, []);
 
+function setAsTab(topic) {
+  console.log('new tabs:', [...allTabs, topic])
+  setAllTabs(allTabs => [...allTabs, topic])
+}
 
   return (
     <View style={styles.container}>
@@ -42,10 +52,14 @@ export default function App() {
         ]}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
-      >
+        
+      ><Text>all tabs:</Text>{allTabs && allTabs.map(tab => 
+        <Topic key={tab.id} topic={tab} deleteTopic={deleteTopic} />
+        )}
+        <Text>all topics:</Text>
         {topics && Array.isArray(topics) ? (
           topics.map(topic => (
-            <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} />
+            <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} setAsTab={() => setAsTab(topic)} />
           ))
         ) : (
           <Text>Загрузка...</Text>

@@ -8,11 +8,14 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { Accordion, AccordionItem, App } from '@/components/Accordion/Accordion';
+import { AddCircle } from '@/components/Icons/AddCircle';
 import { Trash } from '@/components/Icons/Trash';
 import TopicContent from '@/components/TopicContent/TopicContent';
 
+import { addTab } from '../../database/databaseService';
 
-export default function Topic({ topic, deleteTopic }) {
+
+export default function Topic({ topic, deleteTopic, setAsTab }) {
     const { id, name } = topic
 
     const open = useSharedValue(false);
@@ -29,6 +32,9 @@ export default function Topic({ topic, deleteTopic }) {
                     <Text style={styles.idText}>id: {id}</Text>
                     <Pressable onPress={() => deleteTopic(id)} style={styles.btn}>
                         <Trash />
+                    </Pressable>
+                    <Pressable onPress={() => {setAsTab(topic); addTab(id)}} style={styles.btn}>
+                        <AddCircle />
                     </Pressable>
                 </View>
             </Pressable>
