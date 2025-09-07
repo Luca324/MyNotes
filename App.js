@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 
 import {
-  StyleSheet, Text, View, Button, ScrollView,
+  // StyleSheet, Text, View, Button, ScrollView,
+  StyleSheet, Text, View, ScrollView,
   useWindowDimensions
 } from 'react-native';
 
@@ -9,7 +10,7 @@ import {
 
 import Topic from '@components/Topic/Topic';
 import { useKeyboard } from '@react-native-community/hooks';
-import TextInput from '@shared/TextInput';
+// import TextInput from '@shared/TextInput';
 
 import { useTopics } from '@/hooks/useNotes';
 
@@ -65,7 +66,7 @@ export default function App() {
           <Text>Загрузка...</Text>
         )}
       </ScrollView>
-      <View style={[
+      {/* <View style={[
         styles.inputContainer,
         { marginBottom: bottomPadding }
       ]}>
@@ -79,7 +80,7 @@ export default function App() {
           title="create topic"
           onPress={() => newTopicName && createTopic(newTopicName)}
         />
-      </View>
+      </View> */}
     </View>
   );
 }
