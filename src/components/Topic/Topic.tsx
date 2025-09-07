@@ -1,21 +1,26 @@
-import { useEffect, useState } from 'react';
 
-import { StyleSheet, Text, View, Button, Pressable, Image } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 
-import Animated, {
+import {
     useSharedValue,
 } from 'react-native-reanimated';
 
-import { Accordion, AccordionItem, App } from '@/components/Accordion/Accordion';
+import { AccordionItem } from '@/components/Accordion/Accordion';
 import { AddCircle } from '@/components/Icons/AddCircle';
 import { Trash } from '@/components/Icons/Trash';
 import TopicContent from '@/components/TopicContent/TopicContent';
+import type { Topic as TopicType } from '@/types';
 
 import { addTab } from '../../database/databaseService';
 
+interface TopicProps {
+    topic: TopicType;
+    deleteTopic: (id: number) => void;
+    setAsTab?: null | ((topic: TopicType) => void);
+}
 
-export default function Topic({ topic, deleteTopic, setAsTab }) {
+export default function Topic({ topic, deleteTopic, setAsTab = null }: TopicProps) {
     const { id, name } = topic
 
     const open = useSharedValue(false);
@@ -33,7 +38,7 @@ export default function Topic({ topic, deleteTopic, setAsTab }) {
                     <Pressable onPress={() => deleteTopic(id)} style={styles.btn}>
                         <Trash />
                     </Pressable>
-                    <Pressable onPress={() => {setAsTab(topic); addTab(id)}} style={styles.btn}>
+                    <Pressable onPress={() => {if (setAsTab) setAsTab(topic); addTab(id)}} style={styles.btn}>
                         <AddCircle />
                     </Pressable>
                 </View>
@@ -85,7 +90,7 @@ const styles = StyleSheet.create({
         marginTop: 8,
         gap: 8,
     },
-    addNote: {
+    btn: {
         width: 24,
         color: 'black',
         display: 'flex',

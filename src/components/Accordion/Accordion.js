@@ -1,6 +1,5 @@
-import React from 'react';
 
-import { StyleSheet, View, Button, SafeAreaView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 import Animated, {
   useAnimatedStyle,
@@ -13,7 +12,7 @@ export function AccordionItem({
   isExpanded,
   children,
   viewKey,
-  style,
+  style = null,
   duration = 500,
 }) {
   const height = useSharedValue(0);

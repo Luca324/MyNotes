@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getChildrenForTopic, getNotesForTopic, getChildTopics } from '../database/databaseService';
+import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getNotesForTopic, getChildTopics } from '../database/databaseService';
 
 
 
@@ -19,10 +19,10 @@ export function useTopics(parentTopicId = null, init = []) {
     }
     }, [parentTopicId])
 
-    useEffect(() => {
-       console.log('topics')
-        topics.forEach(t => console.log(t))
-    }, [topics])
+    // useEffect(() => {
+    //    console.log('topics')
+    //     topics.forEach(t => console.log(t))
+    // }, [topics])
 
     function createTopic(topicName, parentId = null, orderIndex = 0) {
         const newTopic = {

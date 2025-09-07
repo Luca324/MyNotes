@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 
-import { StyleSheet, Text, View, Button, ScrollView,
-  Keyboard,
-  useWindowDimensions } from 'react-native';
+import {
+  StyleSheet, Text, View, Button, ScrollView,
+  useWindowDimensions
+} from 'react-native';
 
 
-import { StatusBar } from 'expo-status-bar';
 
 import Topic from '@components/Topic/Topic';
 import { useKeyboard } from '@react-native-community/hooks';
 import TextInput from '@shared/TextInput';
 
-import { useTopics, useNotes } from '@/hooks/useNotes';
+import { useTopics } from '@/hooks/useNotes';
 
 import { getAllTabs } from './src/database/databaseService';
 
@@ -31,20 +31,20 @@ export default function App() {
 
   const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics()
   const [newTopicName, setNewTopicName] = useState('')
-const [allTabs, setAllTabs] = useState([])
-useEffect(() => {
-  getAllTabs().then(setAllTabs)
-}, []);
+  const [allTabs, setAllTabs] = useState([])
+  useEffect(() => {
+    getAllTabs().then(setAllTabs)
+  }, []);
 
-function setAsTab(topic) {
-  console.log('new tabs:', [...allTabs, topic])
-  setAllTabs(allTabs => [...allTabs, topic])
-}
+  function setAsTab(topic) {
+    console.log('new tabs:', [...allTabs, topic])
+    setAllTabs(allTabs => [...allTabs, topic])
+  }
 
   return (
     <View style={styles.container}>
-     
-     <ScrollView 
+
+      <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
@@ -52,10 +52,10 @@ function setAsTab(topic) {
         ]}
         keyboardDismissMode="on-drag"
         keyboardShouldPersistTaps="handled"
-        
-      ><Text>all tabs:</Text>{allTabs && allTabs.map(tab => 
+
+      ><Text>all tabs:</Text>{allTabs && allTabs.map(tab =>
         <Topic key={tab.id} topic={tab} deleteTopic={deleteTopic} />
-        )}
+      )}
         <Text>all topics:</Text>
         {topics && Array.isArray(topics) ? (
           topics.map(topic => (
@@ -70,8 +70,8 @@ function setAsTab(topic) {
         { marginBottom: bottomPadding }
       ]}>
         <TextInput
-        style={
-          styles.inputContainer}
+          style={
+            styles.inputContainer}
           value={newTopicName}
           onChangeText={setNewTopicName}
         />

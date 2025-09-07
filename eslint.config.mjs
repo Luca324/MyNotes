@@ -3,22 +3,55 @@ import importPlugin from 'eslint-plugin-import';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import globals from 'globals';
+import tsParser from '@typescript-eslint/parser';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
 export default [
   // Базовые рекомендованные правила ESLint
   js.configs.recommended,
   
-  // Рекомендованные правила для React
+  // Конфигурация для TypeScript файлов
+  {
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2021,
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+      // Отключаем правило, которое требует явного указания типа возвращаемого значения
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      // Отключаем правило, которое требует явного указания типа для модулей
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      // Отключаем правило о любом типа
+      '@typescript-eslint/no-explicit-any': 'off',
+      // Правило для неиспользуемых переменных - используем TypeScript версию
+      '@typescript-eslint/no-unused-vars': ['warn', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
+    },
+  },
+  
+  // Рекомендованные правила для React (для всех файлов)
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       react: reactPlugin,
-    },
-    rules: {
-      ...reactPlugin.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
-      'react/prop-types': 'off',
     },
     languageOptions: {
       parserOptions: {
@@ -26,6 +59,12 @@ export default [
           jsx: true,
         },
       },
+    },
+    rules: {
+      ...reactPlugin.configs.recommended.rules,
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/prop-types': 'off',
     },
     settings: {
       react: {
@@ -43,12 +82,9 @@ export default [
     rules: reactHooksPlugin.configs.recommended.rules,
   },
   
-  // Основная конфигурация
+  // Основная конфигурация для JavaScript файлов
   {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    plugins: {
-      import: importPlugin,
-    },
+    files: ['**/*.{js,jsx}'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
@@ -59,7 +95,21 @@ export default [
       },
     },
     rules: {
-      // Правило для пустых строк до и после функций - ИСПРАВЛЕННАЯ ВЕРСИЯ
+      'no-unused-vars': ['warn', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+      }],
+    },
+  },
+  
+  // Общие правила для импортов (для всех файлов)
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      import: importPlugin,
+    },
+    rules: {
+      // Правило для пустых строк до и после функций
       'padding-line-between-statements': [
         'error',
         { blankLine: 'always', prev: '*', next: 'function' },
@@ -111,9 +161,6 @@ export default [
           pathGroupsExcludedImportTypes: ['react'],
         },
       ],
-
-      // Предупреждение о неиспользуемых переменных
-      'no-unused-vars': ['off'],
     },
   },
   

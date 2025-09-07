@@ -1,7 +1,8 @@
 import { getDBConnection } from "@database/database.js";
 
+import type { Note, Topic } from "@/types";
 // Базовая функция для выполнения любого запроса
-const executeQuery = async (query, params = []) => {
+const executeQuery = async (query: string, params: any[] = []) => {
   try {
     const db = await getDBConnection();
     
@@ -19,7 +20,7 @@ const executeQuery = async (query, params = []) => {
 };
 
 // TOPICS
-export const createTopic = async (name, parentId = null, orderIndex = 0) => {
+export const createTopic = async (name: string, parentId: number | null = null, orderIndex: number = 0): Promise<number> => {
   const query = `
     INSERT INTO topics (name, parent_id, order_index)
     VALUES (?, ?, ?);
@@ -28,7 +29,7 @@ export const createTopic = async (name, parentId = null, orderIndex = 0) => {
   return result.lastInsertRowId; // В expo-sqlite используется lastInsertRowId вместо insertId
 };
 
-export const getTopTopics = async () => {
+export const getTopTopics = async (): Promise<Topic[]> => {
   const query = `
     SELECT * FROM topics
     WHERE parent_id IS ?
@@ -37,8 +38,7 @@ export const getTopTopics = async () => {
   return await executeQuery(query, [null]);
 };
 
-
-export const getChildTopics = async (parentTopicId) => {
+export const getChildTopics = async (parentTopicId: number): Promise<Topic[]> => {
   const query = `
     SELECT * FROM topics
     WHERE parent_id IS ?
@@ -48,7 +48,7 @@ export const getChildTopics = async (parentTopicId) => {
 };
 
 // NOTES
-export const createNote = async (content, topicId, orderIndex = 0) => {
+export const createNote = async (content: string, topicId: number, orderIndex: number = 0): Promise<number> => {
   const query = `
     INSERT INTO notes (content, topic_id, order_index)
     VALUES (?, ?, ?);
@@ -57,7 +57,7 @@ export const createNote = async (content, topicId, orderIndex = 0) => {
   return result.lastInsertRowId;
 };
 
-export const getNotesForTopic = async (parentTopicId) => {
+export const getNotesForTopic = async (parentTopicId: number): Promise<Note[]> => {
   const query = `
     SELECT * FROM notes
     WHERE topic_id IS ?
@@ -66,31 +66,17 @@ export const getNotesForTopic = async (parentTopicId) => {
   return await executeQuery(query, [parentTopicId]);
 }
 
-// Получаем ВСЕ записи для темы (и подтемы, и заметки) и сортируем по order_index. поле content заметки переименовывается в name
-export const getChildrenForTopic = async (topicId) => {
-  const query = `
-    SELECT id, name, 'topic' as type, order_index, created_at
-    FROM topics
-    WHERE parent_id = ?
-    UNION ALL
-    SELECT id, content, 'note' as type, order_index, created_at
-    FROM notes
-    WHERE topic_id = ?
-    ORDER BY order_index ASC;
-  `;
-  return await executeQuery(query, [topicId, topicId]);
-};
-
 // TABS
-export const addTab = async (topicId, orderIndex) => {
+export const addTab = async (topicId: number, orderIndex: number = 0): Promise<number> => {
   const query = `
     INSERT OR REPLACE INTO tabs (topic_id, order_index)
     VALUES (?, ?);
   `;
-  await executeQuery(query, [topicId, orderIndex]);
+  const result = await executeQuery(query, [topicId, orderIndex]);
+  return result.lastInsertRowId;
 };
 
-export const getAllTabs = async () => {
+export const getAllTabs = async (): Promise<Topic[]>=> {
   const query = `
     SELECT t.*, topics.name
     FROM tabs t
@@ -101,29 +87,28 @@ export const getAllTabs = async () => {
 };
 
 // Дополнительные функции
-export const getTopicById = async (topicId) => {
+export const getTopicById = async (topicId: number): Promise<Topic | null> => {
   const query = `SELECT * FROM topics WHERE id = ?;`;
   const results = await executeQuery(query, [topicId]);
   return results.length > 0 ? results[0] : null;
 };
 
-export const updateNote = async (noteId, title, content) => {
+export const updateNote = async (noteId: number, title: string, content: string): Promise<void> => {
   const query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`;
   await executeQuery(query, [title, content, noteId]);
 };
 
-export const deleteNote = async (noteId) => {
+export const deleteNote = async (noteId: number): Promise<void> => {
   const query = `DELETE FROM notes WHERE id = ?;`;
   await executeQuery(query, [noteId]);
 };
 
-export const deleteTopic = async (topicId) => {
+export const deleteTopic = async (topicId: number): Promise<void> => {
   const query = `DELETE FROM topics WHERE id = ?;`;
   await executeQuery(query, [topicId]);
 };
 
-// Функция для получения одной записи
-export const getFirstAsync = async (query, params = []) => {
+export const getFirstAsync = async (query: string, params: any[] = []) => {
   try {
     const db = await getDBConnection();
     return await db.getFirstAsync(query, params);
