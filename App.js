@@ -45,9 +45,12 @@ export default function App() {
   return (
     <View style={styles.container}>
       <ScrollView
-      style={styles.tabsScroll}
-      horizontal
-      showsHorizontalScrollIndicator={false}
+        style={styles.tabsScroll}
+        contentContainerStyle={[
+          styles.tabsContainer
+        ]}
+        horizontal
+        showsHorizontalScrollIndicator={false}
       >
         {allTabs && allTabs.map(tab =>
           <Tab key={tab.id} tab={tab} />
@@ -96,7 +99,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-
+    height: 50,
     marginTop: 25,
     marginBottom: 25,
     flex: 1,
@@ -105,7 +108,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabsScroll: {
-direction: 'row',
+    width: "100%",
+
+
+  }, tabsContainer: {
+    flexDirection: 'row',
+    gap: 15,
   },
   scroll: {
     width: "100%",

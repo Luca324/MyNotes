@@ -1,28 +1,32 @@
 import {
-    StyleSheet, Text, View, ScrollView,
-    useWindowDimensions
-  } from 'react-native';
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  useWindowDimensions,
+} from 'react-native'
 
-import type { Topic } from '@/types';
+import type { Topic } from '@/types'
 
 interface TabProps {
-    tab: Topic
+  tab: Topic
 }
 
-export default function Tab({tab}: TabProps) {
-    return (
-        <View style={styles.container}>
-            <Text>{tab.name}</Text>
-        </View>
-    )
+export default function Tab({ tab }: TabProps) {
+  return (
+    <View style={styles.container}>
+      <Text>{tab.name}</Text>
+    </View>
+  )
 }
 
 const styles = StyleSheet.create({
-container: {
+  container: {
+    height: 30,
     padding: 5,
     margin: 0,
     borderBottomWidth: 1,
-    borderColor: 'black',
+    borderBottomColor: 'black',
     borderRadius: 3,
-}
+  },
 })
