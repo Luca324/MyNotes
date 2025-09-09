@@ -1,15 +1,15 @@
 import { useEffect, useState, useContext } from 'react';
 
 import {
-    StyleSheet, Text, View, ScrollView,
+    StyleSheet, Text, View, ScrollView, Button,
     useWindowDimensions
 } from 'react-native';
 
 
-// import TextInput from '@shared/TextInput';
 import Topic from '@components/Topic/Topic';
 import { getAllTabs } from '@database/databaseService';
 import { useKeyboard } from '@react-native-community/hooks';
+import TextInput from '@shared/TextInput';
 
 import { AppContext } from '@/components/AppProvider';
 import Tab from '@/components/Tab/Tab';
@@ -20,20 +20,20 @@ export default function AppContent() {
     const [bottomPadding, setBottomPadding] = useState(0);
 
 
-    // useEffect(() => {
-    //   if (keyboard.keyboardShown) {
-    //     setBottomPadding(keyboard.keyboardHeight);
-    //   } else {
-    //     setBottomPadding(0);
-    //   }
-    // }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
+    useEffect(() => {
+      if (keyboard.keyboardShown) {
+        setBottomPadding(keyboard.keyboardHeight);
+      } else {
+        setBottomPadding(0);
+      }
+    }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
 
-    const { topics, deleteTopic, allTabs, setAllTabs } = useContext(AppContext)
+    const { topics, deleteTopic, allTabs, setAllTabs, createTopic } = useContext(AppContext)
     const [newTopicName, setNewTopicName] = useState('')
 
     useEffect(() => {
         getAllTabs().then(setAllTabs)
-    }, [setAllTabs, topics]);
+    }, [setAllTabs]);
 
     function setAsTab(topic) {
         console.log('new tabs:', [...allTabs, topic])
@@ -73,7 +73,7 @@ export default function AppContent() {
                     <Text>Загрузка...</Text>
                 )}
             </ScrollView>
-            {/* <View style={[
+            <View style={[
         styles.inputContainer,
         { marginBottom: bottomPadding }
       ]}>
@@ -87,7 +87,7 @@ export default function AppContent() {
           title="create topic"
           onPress={() => newTopicName && createTopic(newTopicName)}
         />
-      </View> */}
+      </View>
         </View>
     );
 }

@@ -27,10 +27,15 @@ export default function Topic({
   setAsTab = null,
 }: TopicProps) {
   const { id, name } = topic
-  const { allTabs } = useContext(AppContext)
+  const { allTabs, setAllTabs } = useContext(AppContext)
   const open = useSharedValue(false)
   const onPress = () => {
     open.value = !open.value
+  }
+
+  function deleteTopicAndTab() {
+    deleteTopic(id)
+    if (isTab) setAllTabs(allTabs.filter(tab => tab.id !== id))
   }
 
   const isTab = allTabs.filter((tab) => tab.id === id).length
@@ -41,7 +46,7 @@ export default function Topic({
         <Text style={styles.nameText}>{name}</Text>
         <View style={styles.horizontal}>
           <Text style={styles.idText}>id: {id}</Text>
-          <Pressable onPress={() => deleteTopic(id)} style={styles.btn}>
+          <Pressable onPress={deleteTopicAndTab} style={styles.btn}>
             <Trash />
           </Pressable>
           {!isTab && (

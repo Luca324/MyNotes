@@ -115,17 +115,20 @@ export const updateNote = async (
   content: string
 ): Promise<void> => {
   const query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`
-  await executeQuery(query, [title, content, noteId])
+  const result = await executeQuery(query, [title, content, noteId])
+  return result.lastInsertRowId
 }
 
 export const deleteNote = async (noteId: number): Promise<void> => {
   const query = `DELETE FROM notes WHERE id = ?;`
-  await executeQuery(query, [noteId])
+  const result = await executeQuery(query, [noteId])
+  return result.lastInsertRowId
 }
 
 export const deleteTopic = async (topicId: number): Promise<void> => {
   const query = `DELETE FROM topics WHERE id = ?;`
-  await executeQuery(query, [topicId])
+  const result = await executeQuery(query, [topicId])
+  return result.lastInsertRowId
 }
 
 export const getFirstAsync = async (query: string, params: any[] = []) => {
