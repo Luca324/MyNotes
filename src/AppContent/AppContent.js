@@ -14,7 +14,6 @@ import { useKeyboard } from '@react-native-community/hooks';
 import { AppContext } from '@/components/AppProvider';
 import Tab from '@/components/Tab/Tab';
 
-
 export default function AppContent() {
     const keyboard = useKeyboard();
     const { height } = useWindowDimensions();
@@ -29,16 +28,12 @@ export default function AppContent() {
     //   }
     // }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
 
-    const { topics, setTopics, createTopic, deleteTopic, renameTopic, allTabs, setAllTabs } = useContext(AppContext)
+    const { topics, deleteTopic, allTabs, setAllTabs } = useContext(AppContext)
     const [newTopicName, setNewTopicName] = useState('')
 
     useEffect(() => {
-        console.log('topics', topics)
-    }, [topics])
-
-    useEffect(() => {
         getAllTabs().then(setAllTabs)
-    }, [setAllTabs]);
+    }, [setAllTabs, topics]);
 
     function setAsTab(topic) {
         console.log('new tabs:', [...allTabs, topic])
@@ -49,9 +44,7 @@ export default function AppContent() {
         <View style={styles.container}>
             <ScrollView
                 style={styles.tabsScroll}
-                contentContainerStyle={[
-                    styles.tabsContainer
-                ]}
+                contentContainerStyle={styles.tabsContainer}
                 horizontal
                 showsHorizontalScrollIndicator={false}
             >
@@ -64,15 +57,13 @@ export default function AppContent() {
                 style={styles.scroll}
                 contentContainerStyle={[
                     styles.scrollContent,
-                    { paddingBottom: bottomPadding + 80 } // 80 - высота вашего inputContainer
+                    { 
+                        paddingBottom: bottomPadding + 80
+                    }
                 ]}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="handled"
-
             >
-                {/* <Text>all tabs:</Text>{allTabs && allTabs.map(tab =>
-        <Topic key={tab.id} topic={tab} deleteTopic={deleteTopic} />
-      )} */}
                 <Text>all topics:</Text>
                 {topics && Array.isArray(topics) ? (
                     topics.map(topic => (
@@ -103,33 +94,26 @@ export default function AppContent() {
 
 const styles = StyleSheet.create({
     container: {
-        height: 50,
-        marginTop: 25,
-        marginBottom: 25,
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     tabsScroll: {
-        width: "100%",
+        maxHeight: 50,
+        marginTop: 25,
     },
     tabsContainer: {
         flexDirection: 'row',
         gap: 15,
+        paddingHorizontal: 16,
     },
     scroll: {
+        flex: 1,
         width: "100%",
-    },
-    inputContainer: {
-        width: '100%',
-        padding: 16,
-        backgroundColor: '#fff',
-        borderTopWidth: 1,
-        borderTopColor: '#eee',
     },
     scrollContent: {
         flexGrow: 1,
-        paddingBottom: 80, // добавьте отступ снизу равный высоте inputContainer
+        paddingHorizontal: 16,
+        paddingTop: 10, // Добавляем отступ сверху
+        alignItems: 'flex-start', // Выравниваем по левому краю
     }
 });

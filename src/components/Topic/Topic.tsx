@@ -19,13 +19,15 @@ interface TopicProps {
   setAsTab?: null | ((topic: TopicType) => void)
 }
 
-export default function Topic({ topic, setAsTab = null }: TopicProps) {
+export default function Topic({ topic, deleteTopic, setAsTab = null }: TopicProps) {
   const { id, name } = topic
-  const { allTabs, deleteTopic } = useContext(AppContext)
+  const { allTabs } = useContext(AppContext)
   const open = useSharedValue(false)
   const onPress = () => {
     open.value = !open.value
   }
+
+  const isTab = allTabs.filter(tab => tab.id === id).length
 
   return (
     <View style={styles.topic}>
@@ -36,7 +38,7 @@ export default function Topic({ topic, setAsTab = null }: TopicProps) {
           <Pressable onPress={() => deleteTopic(id)} style={styles.btn}>
             <Trash />
           </Pressable>
-          <Pressable
+          {!isTab && <Pressable
             onPress={() => {
               if (setAsTab) setAsTab(topic)
               addTab(id)
@@ -44,7 +46,7 @@ export default function Topic({ topic, setAsTab = null }: TopicProps) {
             style={styles.btn}
           >
             <AddCircle />
-          </Pressable>
+          </Pressable>}
         </View>
       </Pressable>
 
