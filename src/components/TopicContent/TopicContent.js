@@ -1,20 +1,20 @@
-import { useState } from 'react';
+import { useState } from 'react'
 
 
-import { StyleSheet, View, Pressable } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native'
 
 
 import {
     useSharedValue,
-} from 'react-native-reanimated';
+} from 'react-native-reanimated'
 
-import { AddCircle } from '@/components/Icons/AddCircle';
-import Note from '@/components/Note/Note';
-import Topic from '@/components/Topic/Topic';
-import { useTopics, useNotes } from '@/hooks/useNotes';
-import TextInput from '@/shared/TextInput';
+import { AddCircle } from '@/components/Icons/AddCircle'
+import Note from '@/components/Note/Note'
+import Topic from '@/components/Topic/Topic'
+import { useTopics, useNotes } from '@/hooks/useNotes'
+import TextInput from '@/shared/TextInput'
 
-import { WriteANote } from '../Icons/WriteANote';
+import { WriteANote } from '../Icons/WriteANote'
 
 
 export default function TopicContent({ topic, deleteTopic }) {
@@ -23,10 +23,10 @@ export default function TopicContent({ topic, deleteTopic }) {
     const { notes, setNotes, createNote, deleteNote } = useNotes(id)
     const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
 
-    const open = useSharedValue(false);
+    const open = useSharedValue(false)
     const onPress = () => {
-        open.value = !open.value;
-    };
+        open.value = !open.value
+    }
 
     return (
         <View style={styles.topicContent}>
@@ -50,7 +50,7 @@ export default function TopicContent({ topic, deleteTopic }) {
                 </Pressable>
             </View>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -99,4 +99,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
     }
-});
+})

@@ -1,18 +1,18 @@
 
-import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 
 
 import {
     useSharedValue,
-} from 'react-native-reanimated';
+} from 'react-native-reanimated'
 
-import { AccordionItem } from '@/components/Accordion/Accordion';
-import { AddCircle } from '@/components/Icons/AddCircle';
-import { Trash } from '@/components/Icons/Trash';
-import TopicContent from '@/components/TopicContent/TopicContent';
-import type { Topic as TopicType } from '@/types';
+import { AccordionItem } from '@/components/Accordion/Accordion'
+import { AddCircle } from '@/components/Icons/AddCircle'
+import { Trash } from '@/components/Icons/Trash'
+import TopicContent from '@/components/TopicContent/TopicContent'
+import type { Topic as TopicType } from '@/types'
 
-import { addTab } from '../../database/databaseService';
+import { addTab } from '../../database/databaseService'
 
 interface TopicProps {
     topic: TopicType;
@@ -23,10 +23,10 @@ interface TopicProps {
 export default function Topic({ topic, deleteTopic, setAsTab = null }: TopicProps) {
     const { id, name } = topic
 
-    const open = useSharedValue(false);
+    const open = useSharedValue(false)
     const onPress = () => {
-        open.value = !open.value;
-    };
+        open.value = !open.value
+    }
 
     return (
         <View style={styles.topic}>
@@ -48,7 +48,7 @@ export default function Topic({ topic, deleteTopic, setAsTab = null }: TopicProp
                 <TopicContent topic={topic} deleteTopic={deleteTopic} />
             </AccordionItem>
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
@@ -110,4 +110,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
     }
-});
+})
