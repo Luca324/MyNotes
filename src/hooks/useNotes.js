@@ -9,7 +9,7 @@ export function useTopics(parentTopicId = null, init = []) {
 
     useEffect(() => {
         if (!parentTopicId) {
-            getNotes().then(n => {
+            getTopics().then(n => {
             setTopics(n)
         })
     } else {
@@ -89,11 +89,11 @@ export function useNotes(topicId = 0) {
     }
 }
 
-async function getNotes() {
+async function getTopics() {
     try {
-        let notes = await getTopTopics()
-        console.log('got notes!')
-        return notes
+        let topics = await getTopTopics()
+        console.log('got topics!', topics)
+        return topics
     } catch (e) {
         console.error('an error occured during getting notes: ', e)
         return []
