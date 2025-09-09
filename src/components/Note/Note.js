@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, TextInput, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
 
 import { formatDate } from '@utils/sharedUtils';
 
@@ -15,7 +15,7 @@ export default function Note({ note, deleteNote }) {
                     <Trash />
                 </Pressable>
             </View>
-            <Text>{note.name}</Text>
+            <Text>{note.content}</Text>
         </View>
     )
 }

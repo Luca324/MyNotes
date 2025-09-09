@@ -13,10 +13,10 @@ export interface Topic extends Timestamped {
 
 // Тип для заметки
 export interface Note extends Timestamped {
-  id: number;
-  topic_id: number;
+  id?: number;
+  topic_id?: number;
   content: string | null;
-  order_index: number;
+  order_index?: number;
 }
 
 // Тип для вкладки

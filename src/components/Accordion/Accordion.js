@@ -13,7 +13,7 @@ export function AccordionItem({
   children,
   viewKey,
   style = null,
-  duration = 500,
+  duration = 50,
 }) {
   const height = useSharedValue(0);
 

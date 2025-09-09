@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 
 import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicDB, createNote as createNoteDB, deleteNote as deleteNoteDB, getNotesForTopic, getChildTopics } from '../database/databaseService';
-
+import { Note, Topic } from '../types';
 
 
 export function useTopics(parentTopicId = null, init = []) {
-    const [topics, setTopics] = useState(init)
+    const [topics, setTopics] = useState<Topic[]>(init)
 
     useEffect(() => {
         if (!parentTopicId) {
@@ -19,21 +19,21 @@ export function useTopics(parentTopicId = null, init = []) {
     }
     }, [parentTopicId])
 
-    function createTopic(topicName, parentId = null, orderIndex = 0) {
+    function createTopic(topicName: string, parentId: number | null = null, orderIndex: number = 0) {
         const newTopic = {
             name: topicName,
             notes: []
         }
         createTopicDB(topicName, parentId, orderIndex).then(res => {
             console.log('res of creating topic', res)
-            console.log('parentId', parentId, 'newTopicsList', topics.concat({...newTopic, id: res}))
-            setTopics(topics.concat({...newTopic, id: res}))
+            console.log('parentId', parentId, 'newTopicsList', topics.concat({...newTopic, id: res} as unknown as Topic))
+            setTopics(topics.concat({...newTopic, id: res} as unknown as Topic))
         })
 
 
     }
 
-    function deleteTopic(topicId) {
+    function deleteTopic(topicId: number) {
         console.log('deleting id:', topicId)
         deleteTopicDB(topicId).then(res => {
             console.log('res of deleting topic', res)
@@ -44,8 +44,11 @@ export function useTopics(parentTopicId = null, init = []) {
 
     }
 
-    function renameTopic(topicId, newName) {
-        setTopics(topics.reduce(topic => topic.id == topicId ? { ...topic, name: newName } : topic, []))
+    function renameTopic(topicId: number, newName: string) {
+        const newTopics = topics.map(topic => 
+            topic.id === topicId ? { ...topic, name: newName } : topic
+        );
+        setTopics(newTopics);
     }
 
 
@@ -53,18 +56,18 @@ export function useTopics(parentTopicId = null, init = []) {
 }
 
 export function useNotes(topicId = 0) {
-    const [notes, setNotes] = useState([])
+    const [notes, setNotes] = useState<Note[]>([])
 
     useEffect(() => {
-        getNotesForTopic(topicId).then(res => {
+        getNotesForTopic(topicId).then((res: Note[]) => {
             setNotes(res)
         })
     }, [topicId])
 
 
-    function createNote(text, topicId) {
-        const newNote = {
-            name: text,
+    function createNote(text: string, topicId: number) {
+        const newNote: Note = {
+            content: text,
             created_at: Date.now(),
         }
         createNoteDB(text, topicId).then(res => {
@@ -73,7 +76,7 @@ export function useNotes(topicId = 0) {
         })
     }
 
-    function deleteNote(noteId) {
+    function deleteNote(noteId: number) {
         deleteNoteDB(noteId).then(res => {
             console.log('res of deleting note', res)
             setNotes(notes.filter(note => note.id !== noteId))
