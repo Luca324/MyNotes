@@ -19,11 +19,6 @@ export function useTopics(parentTopicId = null, init = []) {
     }
     }, [parentTopicId])
 
-    // useEffect(() => {
-    //    console.log('topics')
-    //     topics.forEach(t => console.log(t))
-    // }, [topics])
-
     function createTopic(topicName, parentId = null, orderIndex = 0) {
         const newTopic = {
             name: topicName,
@@ -104,48 +99,5 @@ async function getNotes() {
         return []
     }
 }
-// export async function saveNotes(notes) {
-//     try {
-//         const json = JSON.stringify(notes)
-//         AsyncStorage.removeItem('notes').then(() => {
-//             AsyncStorage.setItem('notes', json)
-//         }
-//         )
 
-//     } catch (e) {
-//         console.error('an error occured during saving notes: ', e)
-//     }
-// }
-
-const defaultNotes = {
-    topics: [
-        {
-            id: 1,
-            name: 'education',
-            notes: [
-                {
-                    text: 'first: common education',
-                    date: Date.now()
-                },
-                {
-                    text: 'second: high education',
-                    date: Date.now()
-                }
-            ]
-        },
-        {
-            id: 2,
-            name: 'work',
-            notes: [
-                {
-                    text: 'nobody likes it',
-                    date: Date.now()
-                },
-                {
-                    text: 'but everybody does',
-                    date: Date.now()
-                }
-            ]
-        }
-    ]
-}
+const defaultTopics = [{"created_at": 1757265812, "id": 51, "name": "Моя новая тема2", "order_index": 0, "parent_id": null}, {"created_at": 1757266298, "id": 53, "name": "Моя новая тема4", "order_index": 0, "parent_id": null}, {"created_at": 1757269970, "id": 54, "name": "Таба", "order_index": 0, "parent_id": null}, {"created_at": 1757270286, "id": 55, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270286, "id": 56, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270286, "id": 57, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270286, "id": 58, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270286, "id": 59, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270287, "id": 60, "name": "Шишлл", "order_index": 0, "parent_id": null}, {"created_at": 1757270287, "id": 61, "name": "Шишлл", "order_index": 0, "parent_id": null}]

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import {
-  // StyleSheet, Text, View, Button, ScrollView,
   StyleSheet, Text, View, ScrollView,
   useWindowDimensions
 } from 'react-native';
@@ -10,8 +9,9 @@ import {
 
 import Topic from '@components/Topic/Topic';
 import { useKeyboard } from '@react-native-community/hooks';
-// import TextInput from '@shared/TextInput';
 
+// import TextInput from '@shared/TextInput';
+import Tab from '@/components/Tab/Tab';
 import { useTopics } from '@/hooks/useNotes';
 
 import { getAllTabs } from './src/database/databaseService';
@@ -44,6 +44,15 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <ScrollView
+      style={styles.tabsScroll}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      >
+        {allTabs && allTabs.map(tab =>
+          <Tab key={tab.id} tab={tab} />
+        )}
+      </ScrollView>
 
       <ScrollView
         style={styles.scroll}
@@ -94,6 +103,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  tabsScroll: {
+direction: 'row',
   },
   scroll: {
     width: "100%",

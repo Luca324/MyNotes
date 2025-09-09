@@ -11,7 +11,6 @@ let db = null
 // Если открыта, просто вернет ссылку.
 export const getDBConnection = async () => {
   if (db) {
-    console.log('Возвращаем существующее соединение с БД')
     return db
   }
 
@@ -25,8 +24,8 @@ export const getDBConnection = async () => {
     await createTables(db)
     return db
   } catch (error) {
-    console.error('Ошибка при открытии/создании БД:', error)
-    throw error // Пробрасываем ошибку выше, чтобы обработать её в UI
+    // console.error('Ошибка при открытии/создании БД:', error)
+    // throw error // Пробрасываем ошибку выше, чтобы обработать её в UI
   }
 }
 
