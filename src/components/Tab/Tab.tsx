@@ -23,6 +23,7 @@ export default function Tab({ tab }: TabProps) {
 
   useEffect(() => {
     if (currentTopic === tab.id) {
+      console.log('active tab', tab.id)
       setIsActive(true)
     } else {
       setIsActive(false)

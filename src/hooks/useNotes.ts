@@ -60,6 +60,7 @@ export function useNotes(topicId = 0) {
 
     useEffect(() => {
         getNotesForTopic(topicId).then((res: Note[]) => {
+        console.log('id, notes', topicId, res)
             setNotes(res)
         })
     }, [topicId])
@@ -71,7 +72,7 @@ export function useNotes(topicId = 0) {
             created_at: Date.now(),
         }
         createNoteDB(text, topicId).then(res => {
-            console.log('res of creating note', res)
+            console.log('res of creating note for', topicId, res)
             setNotes(notes.concat({...newNote, id: res}))
         })
     }

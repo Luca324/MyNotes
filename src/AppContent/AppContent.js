@@ -12,7 +12,9 @@ import { useKeyboard } from '@react-native-community/hooks';
 import TextInput from '@shared/TextInput';
 
 import { AppContext } from '@/components/AppProvider';
+import Note from '@/components/Note/Note';
 import Tab from '@/components/Tab/Tab';
+import { useNotes } from '@/hooks/useNotes';
 
 export default function AppContent() {
     const keyboard = useKeyboard();
@@ -28,15 +30,16 @@ export default function AppContent() {
       }
     }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
 
-    const { topics, deleteTopic, allTabs, setAllTabs, createTopic } = useContext(AppContext)
+    const {currentTopic, topics, deleteTopic, allTabs, setAllTabs, createTopic } = useContext(AppContext)
     const [newTopicName, setNewTopicName] = useState('')
+    const { notes, setNotes, createNote, deleteNote } = useNotes(currentTopic)
 
     useEffect(() => {
         getAllTabs().then(setAllTabs)
     }, [setAllTabs]);
 
     function setAsTab(topic) {
-        console.log('new tabs:', [...allTabs, topic])
+        console.log('new tab:', topic)
         setAllTabs(allTabs => [...allTabs, topic])
     }
 
@@ -66,7 +69,6 @@ export default function AppContent() {
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="handled"
             >
-                <Text>all topics:</Text>
                 {topics && Array.isArray(topics) ? (
                     topics.map(topic => (
                         <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} setAsTab={() => setAsTab(topic)} />
@@ -74,6 +76,9 @@ export default function AppContent() {
                 ) : (
                     <Text>Загрузка...</Text>
                 )}
+                {notes && notes.map(note => (
+                                <Note note={note} deleteNote={deleteNote} key={note.id} />
+                            ))}
             </ScrollView>
             <View style={[
         styles.inputContainer,
