@@ -4,7 +4,7 @@ import { createTopic as createTopicDB, getTopTopics, deleteTopic as deleteTopicD
 import { Note, Topic } from '../types';
 
 
-export function useTopics(parentTopicId = null, init = []) {
+export function useTopics(parentTopicId: number | null = null, init: Topic[] = []) {
     const [topics, setTopics] = useState<Topic[]>(init)
 
     useEffect(() => {

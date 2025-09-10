@@ -1,22 +1,38 @@
+import { useContext, useEffect, useState } from 'react'
+
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   useWindowDimensions,
+  Pressable,
 } from 'react-native'
 
 import type { Topic } from '@/types'
+
+import { AppContext } from '../AppProvider'
 
 interface TabProps {
   tab: Topic
 }
 
 export default function Tab({ tab }: TabProps) {
+  const { currentTopic, setCurrentTopic } = useContext(AppContext)
+  const [isActive, setIsActive] = useState(false)
+
+  useEffect(() => {
+    if (currentTopic === tab.id) {
+      setIsActive(true)
+    } else {
+      setIsActive(false)
+    }
+  }, [currentTopic])
+
   return (
-    <View style={styles.container}>
+    <Pressable style={[styles.container, isActive && styles.active]} onPress={() => setCurrentTopic(tab.id)}>
       <Text>{tab.name}</Text>
-    </View>
+    </Pressable>
   )
 }
 
@@ -27,6 +43,9 @@ const styles = StyleSheet.create({
     margin: 0,
     borderBottomWidth: 1,
     borderBottomColor: 'black',
-    borderRadius: 3,
   },
+  active: {
+    borderBottomWidth: 3,
+
+  }
 })
