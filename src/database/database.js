@@ -73,6 +73,7 @@ const createTables = async (database) => {
     CREATE TABLE IF NOT EXISTS notes (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       topic_id INTEGER NOT NULL,
+      title TEXT,
       content TEXT,
       order_index REAL NOT NULL DEFAULT 0,
       created_at INTEGER DEFAULT (strftime('%s', 'now')),

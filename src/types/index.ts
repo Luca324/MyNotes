@@ -15,7 +15,8 @@ export interface Topic extends Timestamped {
 export interface Note extends Timestamped {
   id?: number;
   topic_id?: number;
-  content: string | null;
+  title?: string | null
+  content?: string | null;
   order_index?: number;
 }
 

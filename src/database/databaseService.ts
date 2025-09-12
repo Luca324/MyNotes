@@ -56,8 +56,9 @@ export const getChildTopics = async (
 
 // NOTES
 export const createNote = async (
-  content: string,
   topicId: number,
+  content: string,
+  title: string = '',
   orderIndex: number = 0
 ): Promise<number> => {
   const query = `
@@ -111,12 +112,32 @@ export const getTopicById = async (topicId: number): Promise<Topic | null> => {
 
 export const updateNote = async (
   noteId: number,
-  title: string,
-  content: string
+  content?: string,
+  title?: string
 ): Promise<void> => {
-  const query = `UPDATE notes SET title = ?, content = ? WHERE id = ?;`
-  const result = await executeQuery(query, [title, content, noteId])
+  // Собираем поля для обновления и параметры
+  const updates: string[] = [];
+  const params: any[] = [];
+  
+  if (title !== undefined) {
+    updates.push('title = ?');
+    params.push(title);
+  }
+  
+  if (content !== undefined) {
+    updates.push('content = ?');
+    params.push(content);
+  }
+  
+  if (updates.length === 0)  return
+  
+  // Добавляем noteId в параметры
+  params.push(noteId);
+  
+  const query = `UPDATE notes SET ${updates.join(', ')} WHERE id = ?;`;
+  const result = await executeQuery(query, params);
   return result.lastInsertRowId
+
 }
 
 export const deleteNote = async (noteId: number): Promise<void> => {

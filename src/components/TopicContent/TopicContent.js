@@ -42,10 +42,10 @@ export default function TopicContent({ topic, deleteTopic }) {
                     onChangeText={setNewNoteText}
                     styles={styles.input}
                 ></TextInput>
-                <Pressable onPress={() => createNote(newNoteText, id)} style={styles.addNote}>
+                <Pressable onPress={() => createNote(id, newNoteText)} style={styles.addNote}>
                     <WriteANote />
                 </Pressable>
-                <Pressable onPress={() => createSubtopic(newNoteText, id)} style={styles.addNote}>
+                <Pressable onPress={() => createSubtopic(id, newNoteText)} style={styles.addNote}>
                     <AddCircle />
                 </Pressable>
             </View>
