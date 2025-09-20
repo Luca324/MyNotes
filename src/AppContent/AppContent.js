@@ -101,14 +101,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#F4F4F4',
+        marginTop: 36,
     },
     tabsScroll: {
-        maxHeight: 50,
-        marginTop: 25,
+        maxHeight: 36,
+        marginBottom: 8,
     },
     tabsContainer: {
         flexDirection: 'row',
-        gap: 15,
+        gap: 8,
         paddingHorizontal: 16,
     },
     scroll: {
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
         paddingHorizontal: 16,
-        paddingTop: 10, // Добавляем отступ сверху
         alignItems: 'flex-start', // Выравниваем по левому краю
     }
 });

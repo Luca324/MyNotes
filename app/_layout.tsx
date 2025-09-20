@@ -11,14 +11,14 @@ export default function RootLayout() {
           name="index"
           options={{
             title: 'Мои заметки',
-            headerShown: true, // можно false сделать и header с title не будет
+            headerShown: false, // можно false сделать и header с title не будет
           }}
         />
         <Stack.Screen
           name="noteEditor"
           options={{
             title: 'Редактор заметок',
-            headerShown: true,
+            headerShown: false,
           }}
         />
       </Stack>
