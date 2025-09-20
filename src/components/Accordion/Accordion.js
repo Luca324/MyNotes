@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { StyleSheet, View, Animated, Easing } from 'react-native';
 
@@ -10,31 +10,56 @@ export function AccordionItem({
   duration = 300,
 }) {
   const animatedHeight = useRef(new Animated.Value(0)).current;
+  const [contentRendered, setContentRendered] = useState(false);
   const contentHeight = useRef(0);
 
   useEffect(() => {
-    Animated.timing(animatedHeight, {
-      toValue: isExpanded ? contentHeight.current : 0,
-      duration,
-      easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
-      useNativeDriver: false,
-    }).start();
-  }, [isExpanded, duration]);
+    if (isExpanded) {
+      setContentRendered(true);
+    } else {
+      // Закрываем анимацию
+      Animated.timing(animatedHeight, {
+        toValue: 0,
+        duration,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [isExpanded]);
+
+  useEffect(() => {
+    if (contentRendered && contentHeight.current > 0 && isExpanded) {
+      // Открываем анимацию после рендера контента
+      Animated.timing(animatedHeight, {
+        toValue: contentHeight.current,
+        duration,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [contentRendered, contentHeight.current, isExpanded]);
+
+  const handleLayout = (event) => {
+    const height = event.nativeEvent.layout.height;
+    if (height > 0) {
+      contentHeight.current = height;
+    }
+  };
 
   return (
     <Animated.View
-      key={`accordionItem_${viewKey}`}
       style={[
         styles.animatedView,
         { height: animatedHeight },
         style
-      ]}>
+      ]}
+    >
       <View
-        onLayout={(e) => {
-          contentHeight.current = e.nativeEvent.layout.height;
-        }}
-        style={styles.wrapper}>
-        {children}
+        onLayout={handleLayout}
+        style={styles.wrapper}
+        collapsable={false}
+      >
+        {contentRendered && children}
       </View>
     </Animated.View>
   );

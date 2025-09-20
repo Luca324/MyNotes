@@ -32,6 +32,7 @@ export default function Topic({
       const [isExpanded, setIsExpanded] = useState<boolean>(false)
   
       const onPress = () => {
+          console.log('accordion isExpanded', !isExpanded)
           setIsExpanded(!isExpanded)
       }
 
@@ -66,10 +67,7 @@ export default function Topic({
         </View>
       </Pressable>
 
-      <AccordionItem isExpanded={isExpanded} viewKey="Accordion">
-        <TopicContent topic={topic} deleteTopic={deleteTopic} />
-        {/* {isExpanded && <TopicContent topic={topic} deleteTopic={deleteTopic} />} */}
-      </AccordionItem>
+      {isExpanded && <TopicContent topic={topic} deleteTopic={deleteTopic} />}
     </View>
   )
 }
