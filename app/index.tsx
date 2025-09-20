@@ -1,12 +1,5 @@
-import AppContent from '@/AppContent/AppContent';
-import { AppProvider } from '@/components/AppProvider';
-
+import AppContent from '@/AppContent/AppContent'
 
 export default function App() {
-
-  return (
-    <AppProvider>
-     <AppContent/>
-    </AppProvider>
-  );
+  return <AppContent />
 }
