@@ -4,9 +4,14 @@ import { Link } from 'expo-router';
 
 import { formatDate } from '@utils/sharedUtils';
 
+import { MoreVertical } from '../Icons/MoreVertical';
 import { Trash } from '../Icons/Trash';
 
 export default function Note({ note, deleteNote, topicId }) {
+    function openNoteSettings() {
+        console.log(openNoteSettings)
+    }
+
     return (
         <Link href={{ pathname: '/noteEditor', params: { topicId: topicId, noteId: note.id } }} asChild>
             <Pressable style={styles.noteWrapper}>
@@ -16,6 +21,9 @@ export default function Note({ note, deleteNote, topicId }) {
                         <Text style={styles.id}>{formatDate(note.created_at)}</Text>
                         <Pressable onPress={() => deleteNote(note.id)} style={styles.btn}>
                             <Trash />
+                        </Pressable>
+                        <Pressable onPress={openNoteSettings} style={styles.btn}>
+                            <MoreVertical />
                         </Pressable>
                     </View>
                     {note.title && <Text style={styles.title}>{note.title}</Text>}
@@ -42,6 +50,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
         gap: 8,
     },
     id: {
