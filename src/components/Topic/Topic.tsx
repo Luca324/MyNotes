@@ -17,6 +17,8 @@ import { AddCircle } from '@/components/Icons/AddCircle'
 import { Trash } from '@/components/Icons/Trash'
 import Modal from '@/components/Modal/Modal'
 import TopicContent from '@/components/TopicContent/TopicContent'
+import { useTopics } from '@/hooks/useNotes'
+import TextInput from '@/shared/TextInput'
 import type { Topic as TopicType } from '@/types'
 
 import { addTab } from '../../database/databaseService'
@@ -50,6 +52,8 @@ export default function Topic({
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
+  const [subtopicVisible, setSubtopicVisible] = useState<boolean>(false)
+
   const onPress = () => {
     setIsExpanded(!isExpanded)
   }
@@ -65,6 +69,13 @@ export default function Topic({
     console.log(openTopicSettings)
     setModalVisible(true)
   }
+
+  const {
+    topics: subtopics,
+    createTopic: createSubtopic,
+    deleteTopic: deleteSubtopic,
+  } = useTopics(id)
+  const [newSubtopicName, setNewSubtopicName] = useState('')
 
   return (
     <View style={[styles.topic, { backgroundColor }]}>
@@ -82,7 +93,12 @@ export default function Topic({
       </TouchableOpacity>
 
       {isExpanded && (
-        <TopicContent topic={topic} deleteTopic={deleteTopic} depth={depth} />
+        <TopicContent
+          topic={topic}
+          subtopics={subtopics}
+          deleteSubtopic={deleteSubtopic}
+          depth={depth}
+        />
       )}
       <Modal modalVisible={modalVisible} setModalVisible={setModalVisible}>
         <Pressable onPress={deleteTopicAndTab} style={styles.modalButton}>
@@ -108,6 +124,29 @@ export default function Topic({
             <Text>Добавить заметку</Text>
           </Pressable>
         </Link>
+
+          <Pressable
+            onPress={() => setSubtopicVisible(!subtopicVisible)}
+            style={styles.modalButton}
+          >
+            <Text style={subtopicVisible && styles.underline}>Создать подтему</Text>
+          </Pressable>
+          {subtopicVisible && (
+            <View style={styles.inputContainer}>
+              <TextInput
+                value={newSubtopicName}
+                onChangeText={setNewSubtopicName}
+                styles={styles.input}
+              />
+
+              <Pressable
+                onPress={() => createSubtopic(id, newSubtopicName)}
+                style={styles.readyButton}
+          >
+            <Text>Готово</Text>
+          </Pressable>
+            </View>
+          )}
       </Modal>
     </View>
   )

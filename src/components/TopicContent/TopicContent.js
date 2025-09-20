@@ -1,43 +1,25 @@
-import { useState } from 'react'
 
-import { StyleSheet, View, Pressable } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
-import { useRouter } from 'expo-router';
 
-import { AddCircle } from '@/components/Icons/AddCircle'
 import Note from '@/components/Note/Note'
 import Topic from '@/components/Topic/Topic'
-import { useTopics, useNotes } from '@/hooks/useNotes'
-import TextInput from '@/shared/TextInput'
+import { useNotes } from '@/hooks/useNotes'
 
 
-export default function TopicContent({ topic, deleteTopic, depth }) {
-    const router = useRouter();
-    const { id, name } = topic
-    const [newNoteText, setNewNoteText] = useState('')
-    const { notes, setNotes, createNote, deleteNote } = useNotes(id)
-    const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
+export default function TopicContent({ topic, depth, subtopics, deleteSubtopic }) {
+    const { id } = topic
+    const { notes, deleteNote } = useNotes(id)
 
     return (
         <View style={styles.topicContent}>
             {subtopics && subtopics.map(subtopic => (
-                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth+1}/>
+                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth + 1} />
             ))}
             {notes && notes.map(note => (
                 <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />
             ))
             }
-            <View style={styles.inputContainer}>
-                <TextInput
-                    value={newNoteText}
-                    onChangeText={setNewNoteText}
-                    styles={styles.input}
-                ></TextInput>
-
-                <Pressable onPress={() => createSubtopic(id, newNoteText)} style={styles.addNote}>
-                    <AddCircle />
-                </Pressable>
-            </View>
         </View >
     )
 }

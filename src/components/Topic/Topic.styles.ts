@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 8,
     gap: 8,
+    height: 36,
   },
   btn: {
     width: 24,
@@ -40,13 +41,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    margin: 12,
     padding: 10,
     width: '70%',
     backgroundColor: '#F4F4F4',
     borderWidth: 0,
-    borderRadius: 4,
-    height: 35,
+    borderRadius: 8,
+    height: 36,
   },
   horizontal: {
     flexDirection: 'row',
@@ -60,4 +60,17 @@ export const styles = StyleSheet.create({
     color: 'black',
     padding: 4,
   },
+  readyButton: {
+    backgroundColor: '#a5b4fc',
+    height: 36,
+    borderRadius: 8,
+
+    padding: 5,
+  },
+  underline: {
+    // borderBottomColor: 'black',
+    // borderBottomWidth: 1,
+    textDecorationColor: 'black',
+    textDecorationLine: 'underline',
+  }
 })
