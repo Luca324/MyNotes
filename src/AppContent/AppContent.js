@@ -92,7 +92,7 @@ export default function AppContent() {
         />
         <Button
           title="create topic"
-          onPress={() => newTopicName && createTopic(newTopicName)}
+          onPress={() => newTopicName && createTopic(0, newTopicName)}
         />
       </View>
         </View>

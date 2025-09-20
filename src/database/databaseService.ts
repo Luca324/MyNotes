@@ -22,10 +22,11 @@ const executeQuery = async (query: string, params: any[] = []) => {
 
 // TOPICS
 export const createTopic = async (
-  name: string,
   parentId: number | null = null,
+  name: string,
   orderIndex: number = 0
 ): Promise<number> => {
+  console.log('name', name, parentId)
   const query = `
     INSERT INTO topics (name, parent_id, order_index)
     VALUES (?, ?, ?);

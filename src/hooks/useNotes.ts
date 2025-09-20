@@ -31,15 +31,15 @@ export function useTopics(
   }, [parentTopicId])
 
   function createTopic(
-    topicName: string,
     parentId: number | null = null,
+    topicName: string,
     orderIndex: number = 0
   ) {
     const newTopic = {
       name: topicName,
       notes: [],
     }
-    createTopicDB(topicName, parentId, orderIndex).then((res) => {
+    createTopicDB(parentId, topicName, orderIndex).then((res) => {
       console.log('res of creating topic', res)
       console.log(
         'parentId',
