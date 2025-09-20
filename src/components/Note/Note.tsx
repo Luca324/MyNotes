@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
   },
   modalButton: {
     backgroundColor: 'white',
-    width: '100%',
+    width: 250,
+    alignItems: 'center',
     color: 'black',
     padding: 4,
-    borderRadius: 10,
   },
 })

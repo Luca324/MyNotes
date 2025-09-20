@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     alignItems: 'center',
     backgroundColor: 'white',
-    padding: 10,
+    paddingVertical: 10,
     borderRadius: 10,
-    minWidth: 250,
+    width: 250,
   }
 });

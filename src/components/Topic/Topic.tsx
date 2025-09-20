@@ -75,22 +75,7 @@ export default function Topic({
         <Text style={[styles.nameText, { color }]}>{name}</Text>
         <View style={styles.horizontal}>
           <Text style={styles.idText}>id: {id}</Text>
-          {/* <Pressable onPress={deleteTopicAndTab} style={styles.btn}>
-            <Trash />
-          </Pressable> */}
           {isExpanded ? <ChevronUp /> : <ChevronDown />}
-          {!isTab && (
-            <Pressable
-              onPress={() => {
-                addTab(id).then(() => {
-                  if (setAsTab) setAsTab(topic)
-                })
-              }}
-              style={styles.btn}
-            >
-              <AddCircle />
-            </Pressable>
-          )}
         </View>
       </TouchableOpacity>
 
@@ -101,6 +86,18 @@ export default function Topic({
         <Pressable onPress={deleteTopicAndTab} style={styles.modalButton}>
           <Text>Удалить</Text>
         </Pressable>
+        {!isTab && (
+          <Pressable
+            onPress={() => {
+              addTab(id).then(() => {
+                if (setAsTab) setAsTab(topic)
+              })
+            }}
+            style={styles.modalButton}
+          >
+            <Text>Закрепить</Text>
+          </Pressable>
+        )}
       </Modal>
     </View>
   )
