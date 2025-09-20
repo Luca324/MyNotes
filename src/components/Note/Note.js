@@ -7,7 +7,6 @@ import { formatDate } from '@utils/sharedUtils';
 import { Trash } from '../Icons/Trash';
 
 export default function Note({ note, deleteNote, topicId }) {
-    // console.log('note', note)
     return (
         <Link href={{ pathname: '/noteEditor', params: { topicId: topicId, noteId: note.id } }} asChild>
             <Pressable style={styles.noteWrapper}>

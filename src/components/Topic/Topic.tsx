@@ -29,7 +29,6 @@ export default function Topic({
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
   const onPress = () => {
-    console.log('accordion isExpanded', !isExpanded)
     setIsExpanded(!isExpanded)
   }
 

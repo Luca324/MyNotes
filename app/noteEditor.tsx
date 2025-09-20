@@ -10,13 +10,11 @@ import { createNote, deleteNote, getNoteById, updateNote } from '@/database/data
 import TextInput from '@/shared/TextInput'
 import { Note } from '@/types'
 
-export default function NoteEditor() {
-  console.log('hello from HOTEEDITOR')
+export default function NoteEditor({creating = true}) {
   const params = useLocalSearchParams()
   const topicId = params.topicId ? Number(params.topicId) : undefined
-  const [noteId, setNoteId] = useState<number | undefined>(
-    params.noteId ? Number(params.noteId) : undefined
-  )
+  const paramsNoteId = params.noteId ? Number(params.noteId) : undefined
+  const [noteId, setNoteId] = useState<number | undefined>(paramsNoteId )
 
   const [exists, setExists] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
@@ -24,12 +22,12 @@ export default function NoteEditor() {
   const isCreatingRef = useRef<boolean>(false)
 
   useMemo(() => {
-    if (!noteId) {
+    if (!paramsNoteId) {
       // если NoteEditor был вызван для создания заметки, а не редактирования
       isCreatingRef.current = true
     } else {
       isCreatingRef.current = false
-      getNoteById(noteId).then((note: Note | null) => {
+      getNoteById(paramsNoteId).then((note: Note | null) => {
         setTitle(note?.title || '')
         setContent(note?.content || '')
       })
@@ -38,17 +36,14 @@ export default function NoteEditor() {
 
   useEffect(() => {
     if (!exists && topicId && (title || content)) {
-      console.log('creating note', title, content)
       createNote(topicId, content, title).then((res) => {
         setExists(true)
         setNoteId(res)
       })
     } else if (!title && !content && noteId && isCreatingRef.current) {
-      console.log('deleting note')
       // если NoteEditor был вызван для создания заметки, а не редактирования, то когда поля пустые - она удалчется. это гарантирует то что если человек передумал писать заметку, то не создастся пустая. тут еще есть над чем подмать: надо ли удалять если заметка редактировалась?
       deleteNote(noteId).then((res) => setExists(false))
     } else if (noteId) {
-      console.log('updating note', title, content)
       updateNote(noteId, content, title)
     }
   }, [title, content, topicId, noteId])
