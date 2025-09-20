@@ -1,8 +1,8 @@
 import { useState } from 'react'
 
-
 import { StyleSheet, View, Pressable } from 'react-native'
 
+import { useRouter, Link } from 'expo-router';
 
 import {
     useSharedValue,
@@ -16,41 +16,53 @@ import TextInput from '@/shared/TextInput'
 
 import { WriteANote } from '../Icons/WriteANote'
 
-
 export default function TopicContent({ topic, deleteTopic }) {
-    const { id, name } = topic
-    const [newNoteText, setNewNoteText] = useState('')
-    const { notes, setNotes, createNote, deleteNote } = useNotes(id)
-    const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
+  const router = useRouter();
+  const { id, name } = topic
+  const [newNoteText, setNewNoteText] = useState('')
+  const { notes, setNotes, createNote, deleteNote } = useNotes(id)
+  const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
 
-    const open = useSharedValue(false)
-    const onPress = () => {
-        open.value = !open.value
+  const open = useSharedValue(false)
+  const onPress = () => {
+      open.value = !open.value
+  }
+
+const handleNavigateToNoteEditor = () => {
+    if (router && typeof router.navigate === 'function') {
+      router.navigate({
+        pathname: '/noteEditor',
+        params: { topicId: id } // передаем ID темы
+      });
     }
+  }
 
-    return (
-        <View style={styles.topicContent}>
-            {subtopics && subtopics.map(subtopic => (
-                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
-            ))}
-            {notes && notes.map(note => (
-                <Note note={note} deleteNote={deleteNote} key={note.id} />
-            ))}
-            <View style={styles.inputContainer}>
-                <TextInput
-                    value={newNoteText}
-                    onChangeText={setNewNoteText}
-                    styles={styles.input}
-                ></TextInput>
-                <Pressable onPress={() => createNote(id, newNoteText)} style={styles.addNote}>
-                    <WriteANote />
-                </Pressable>
-                <Pressable onPress={() => createSubtopic(id, newNoteText)} style={styles.addNote}>
-                    <AddCircle />
-                </Pressable>
-            </View>
-        </View>
-    )
+  return (
+      <View style={styles.topicContent}>
+          {subtopics && subtopics.map(subtopic => (
+              <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
+          ))}
+          {notes && notes.map(note => (
+              <Note note={note} deleteNote={deleteNote} key={note.id} />
+          ))}
+          <View style={styles.inputContainer}>
+              <TextInput
+                  value={newNoteText}
+                  onChangeText={setNewNoteText}
+                  styles={styles.input}
+              ></TextInput>
+
+              <Link href={{ pathname: '/noteEditor', params: { topicId: id } }} asChild>
+  <Pressable style={styles.addNote}>
+    <WriteANote />
+  </Pressable>
+</Link>
+              <Pressable onPress={() => createSubtopic(id, newNoteText)} style={styles.addNote}>
+                  <AddCircle />
+              </Pressable>
+          </View>
+      </View>
+  )
 }
 
 const styles = StyleSheet.create({
