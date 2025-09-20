@@ -1,39 +1,37 @@
+import { useEffect, useRef } from 'react';
 
-import { StyleSheet, View } from 'react-native';
-
-import Animated, {
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { StyleSheet, View, Animated, Easing } from 'react-native';
 
 export function AccordionItem({
   isExpanded,
   children,
   viewKey,
   style = null,
-  duration = 50,
+  duration = 300,
 }) {
-  const height = useSharedValue(0);
+  const animatedHeight = useRef(new Animated.Value(0)).current;
+  const contentHeight = useRef(0);
 
-  const derivedHeight = useDerivedValue(() =>
-    withTiming(height.value * Number(isExpanded.value), {
+  useEffect(() => {
+    Animated.timing(animatedHeight, {
+      toValue: isExpanded ? contentHeight.current : 0,
       duration,
-    })
-  );
-  
-  const bodyStyle = useAnimatedStyle(() => ({
-    height: derivedHeight.value,
-  }));
+      easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+      useNativeDriver: false,
+    }).start();
+  }, [isExpanded, duration]);
 
   return (
     <Animated.View
       key={`accordionItem_${viewKey}`}
-      style={[styles.animatedView, bodyStyle, style]}>
+      style={[
+        styles.animatedView,
+        { height: animatedHeight },
+        style
+      ]}>
       <View
         onLayout={(e) => {
-          height.value = e.nativeEvent.layout.height;
+          contentHeight.current = e.nativeEvent.layout.height;
         }}
         style={styles.wrapper}>
         {children}
@@ -41,7 +39,6 @@ export function AccordionItem({
     </Animated.View>
   );
 }
-
 
 const styles = StyleSheet.create({
   wrapper: {

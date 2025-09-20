@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 
@@ -28,10 +28,12 @@ export default function Topic({
 }: TopicProps) {
   const { id, name } = topic
   const { allTabs, setAllTabs } = useContext(AppContext)
-  const open = useSharedValue(false)
-  const onPress = () => {
-    open.value = !open.value
-  }
+  
+      const [isExpanded, setIsExpanded] = useState<boolean>(false)
+  
+      const onPress = () => {
+          setIsExpanded(!isExpanded)
+      }
 
   function deleteTopicAndTab() {
     deleteTopic(id)
@@ -64,8 +66,9 @@ export default function Topic({
         </View>
       </Pressable>
 
-      <AccordionItem isExpanded={open} viewKey="Accordion">
+      <AccordionItem isExpanded={isExpanded} viewKey="Accordion">
         <TopicContent topic={topic} deleteTopic={deleteTopic} />
+        {/* {isExpanded && <TopicContent topic={topic} deleteTopic={deleteTopic} />} */}
       </AccordionItem>
     </View>
   )
