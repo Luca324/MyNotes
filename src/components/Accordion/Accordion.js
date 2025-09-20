@@ -22,6 +22,7 @@ export function AccordionItem({
       duration,
     })
   );
+  
   const bodyStyle = useAnimatedStyle(() => ({
     height: derivedHeight.value,
   }));

@@ -4,10 +4,6 @@ import { StyleSheet, View, Pressable } from 'react-native'
 
 import { useRouter, Link } from 'expo-router';
 
-import {
-    useSharedValue,
-} from 'react-native-reanimated'
-
 import { AddCircle } from '@/components/Icons/AddCircle'
 import Note from '@/components/Note/Note'
 import Topic from '@/components/Topic/Topic'
@@ -22,20 +18,6 @@ export default function TopicContent({ topic, deleteTopic }) {
     const [newNoteText, setNewNoteText] = useState('')
     const { notes, setNotes, createNote, deleteNote } = useNotes(id)
     const { topics: subtopics, setTopics: setSubtopics, createTopic: createSubtopic, deleteTopic: deleteSubtopic, renameTopic: renameSubtopic } = useTopics(id)
-
-    const open = useSharedValue(false)
-    const onPress = () => {
-        open.value = !open.value
-    }
-
-    const handleNavigateToNoteEditor = () => {
-        if (router && typeof router.navigate === 'function') {
-            router.navigate({
-                pathname: '/noteEditor',
-                params: { topicId: id } // передаем ID темы
-            });
-        }
-    }
 
     return (
         <View style={styles.topicContent}>

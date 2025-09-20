@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 import {
   createTopic as createTopicDB,
-  getTopTopics,
   deleteTopic as deleteTopicDB,
   createNote as createNoteDB,
   updateNote as updateNoteDB,
@@ -12,22 +11,13 @@ import {
 } from '../database/databaseService'
 import { Note, Topic } from '../types'
 
-export function useTopics(
-  parentTopicId: number | null = null,
-  init: Topic[] = []
-) {
+export function useTopics(parentTopicId: number = 0, init: Topic[] = []) {
   const [topics, setTopics] = useState<Topic[]>(init)
 
   useEffect(() => {
-    if (!parentTopicId) {
-      getTopics().then((n) => {
-        setTopics(n)
-      })
-    } else {
-      getChildTopics(parentTopicId).then((n) => {
-        setTopics(n)
-      })
-    }
+    getChildTopics(parentTopicId).then((n) => {
+      setTopics(n)
+    })
   }, [parentTopicId])
 
   function createTopic(
@@ -78,7 +68,7 @@ export function useNotes(topicId = 0) {
 
   useEffect(() => {
     getNotesForTopic(topicId).then((res: Note[]) => {
-      console.log('id, notes', topicId, res)
+      console.log(`getting notes for topic ${topicId}`, res)
       setNotes(res)
     })
   }, [topicId])
@@ -123,87 +113,3 @@ export function useNotes(topicId = 0) {
     deleteNote,
   }
 }
-
-async function getTopics() {
-  try {
-    let topics = await getTopTopics()
-    console.log('got topics!', topics)
-    return topics
-  } catch (e) {
-    console.error('an error occured during getting notes: ', e)
-    return []
-  }
-}
-
-const defaultTopics = [
-  {
-    created_at: 1757265812,
-    id: 51,
-    name: 'Моя новая тема2',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757266298,
-    id: 53,
-    name: 'Моя новая тема4',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757269970,
-    id: 54,
-    name: 'Таба',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270286,
-    id: 55,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270286,
-    id: 56,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270286,
-    id: 57,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270286,
-    id: 58,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270286,
-    id: 59,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270287,
-    id: 60,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-  {
-    created_at: 1757270287,
-    id: 61,
-    name: 'Шишлл',
-    order_index: 0,
-    parent_id: null,
-  },
-]
