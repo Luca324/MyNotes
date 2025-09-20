@@ -13,6 +13,7 @@ export const styles = StyleSheet.create({
   topicHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 2,
     gap: 8,
   },
@@ -49,6 +50,7 @@ export const styles = StyleSheet.create({
   },
   horizontal: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 8,
   },
 })

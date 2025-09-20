@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react'
 
-import { StyleSheet, Text, View, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Pressable, TouchableOpacity } from 'react-native'
 
 import { getDepthColor, getTextColor } from 'colorSchemes'
 
@@ -11,8 +11,11 @@ import type { Topic as TopicType } from '@/types'
 
 import { addTab } from '../../database/databaseService'
 import { AppContext } from '../AppProvider'
+import { ChevronDown } from '../Icons/ChevronDown'
+import { ChevronUp } from '../Icons/ChevronUp'
 
 import { styles } from './Topic.styles'
+
 
 interface TopicProps {
   topic: TopicType
@@ -46,15 +49,20 @@ export default function Topic({
 
   const isTab = allTabs.filter((tab) => tab.id === id).length
 
+function openTopicSettings() {
+  console.log(openTopicSettings)
+}
+
   return (
     <View style={[styles.topic, { backgroundColor }]}>
-      <Pressable onPress={onPress} style={styles.topicHeader}>
+      <TouchableOpacity onPress={onPress} activeOpacity={0.8} onLongPress={openTopicSettings} style={styles.topicHeader}>
         <Text style={[styles.nameText, { color }]}>{name}</Text>
         <View style={styles.horizontal}>
           <Text style={styles.idText}>id: {id}</Text>
           <Pressable onPress={deleteTopicAndTab} style={styles.btn}>
             <Trash />
           </Pressable>
+          {isExpanded ? <ChevronUp /> : <ChevronDown />}
           {!isTab && (
             <Pressable
               onPress={() => {
@@ -68,7 +76,7 @@ export default function Topic({
             </Pressable>
           )}
         </View>
-      </Pressable>
+      </TouchableOpacity>
 
       {isExpanded && <TopicContent topic={topic} deleteTopic={deleteTopic} depth={depth}/>}
     </View>

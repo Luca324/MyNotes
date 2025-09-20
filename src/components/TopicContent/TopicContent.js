@@ -22,7 +22,7 @@ export default function TopicContent({ topic, deleteTopic, depth }) {
     return (
         <View style={styles.topicContent}>
             {subtopics && subtopics.map(subtopic => (
-                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth+1}/>
+                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
             ))}
             {notes && notes.map(note => (
                 <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />
@@ -87,6 +87,7 @@ const styles = StyleSheet.create({
         width: '70%',
         backgroundColor: '#F4F4F4',
         borderWidth: 0,
+        borderRadius: 4,
         height: 35,
     },
     horizontal: {
