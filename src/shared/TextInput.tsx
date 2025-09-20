@@ -12,6 +12,7 @@ export default function TextInput({
   onChangeText,
   styles = defaultStyles.input,
   defaultValue = "",
+  placeholder=""
 }: TextInputProps) {
   return (
     <Input
@@ -20,6 +21,7 @@ export default function TextInput({
       value={value}
       onChangeText={onChangeText}
       defaultValue={defaultValue}
+      placeholder={placeholder}
     />
   );
 }

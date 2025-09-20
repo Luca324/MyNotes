@@ -56,6 +56,12 @@ export const getChildTopics = async (
 }
 
 // NOTES
+export const getNoteById = async (noteId: number): Promise<Note | null> => {
+  const query = `SELECT * FROM notes WHERE id = ?;`
+  const results = await executeQuery(query, [noteId])
+  return results.length > 0 ? results[0] : null
+}
+
 export const createNote = async (
   topicId: number,
   content: string,
