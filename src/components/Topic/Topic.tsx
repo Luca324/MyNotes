@@ -2,9 +2,6 @@ import { useContext, useState } from 'react'
 
 import { StyleSheet, Text, View, Pressable } from 'react-native'
 
-import { useSharedValue } from 'react-native-reanimated'
-
-import { AccordionItem } from '@/components/Accordion/Accordion'
 import { AddCircle } from '@/components/Icons/AddCircle'
 import { Trash } from '@/components/Icons/Trash'
 import TopicContent from '@/components/TopicContent/TopicContent'
@@ -28,17 +25,17 @@ export default function Topic({
 }: TopicProps) {
   const { id, name } = topic
   const { allTabs, setAllTabs } = useContext(AppContext)
-  
-      const [isExpanded, setIsExpanded] = useState<boolean>(false)
-  
-      const onPress = () => {
-          console.log('accordion isExpanded', !isExpanded)
-          setIsExpanded(!isExpanded)
-      }
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(false)
+
+  const onPress = () => {
+    console.log('accordion isExpanded', !isExpanded)
+    setIsExpanded(!isExpanded)
+  }
 
   function deleteTopicAndTab() {
     deleteTopic(id)
-    if (isTab) setAllTabs(allTabs.filter(tab => tab.id !== id))
+    if (isTab) setAllTabs(allTabs.filter((tab) => tab.id !== id))
   }
 
   const isTab = allTabs.filter((tab) => tab.id === id).length
