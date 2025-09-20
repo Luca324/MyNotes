@@ -1,42 +1,40 @@
 import { useEffect, useState, useContext } from 'react';
 
-import {
-    StyleSheet, Text, View, ScrollView, Button,
-    useWindowDimensions
-} from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Button, } from 'react-native';
 
 
 import Topic from '@components/Topic/Topic';
-import { getAllTabs } from '@database/databaseService';
 import { useKeyboard } from '@react-native-community/hooks';
 import TextInput from '@shared/TextInput';
 
 import { AppContext } from '@/components/AppProvider';
 import Note from '@/components/Note/Note';
 import Tab from '@/components/Tab/Tab';
-import { useNotes } from '@/hooks/useNotes';
+import { getChildTopics, getNotesForTopic } from '@/database/databaseService';
+import { useNotes, useTopics } from '@/hooks/useNotes';
 
 export default function AppContent() {
     const keyboard = useKeyboard();
-    const { height } = useWindowDimensions();
     const [bottomPadding, setBottomPadding] = useState(0);
 
-
     useEffect(() => {
-      if (keyboard.keyboardShown) {
-        setBottomPadding(keyboard.keyboardHeight);
-      } else {
-        setBottomPadding(0);
-      }
+        if (keyboard.keyboardShown) {
+            setBottomPadding(keyboard.keyboardHeight);
+        } else {
+            setBottomPadding(0);
+        }
     }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
 
-    const {currentTopic, topics, deleteTopic, allTabs, setAllTabs, createTopic } = useContext(AppContext)
+    const { currentTopic, allTabs, setAllTabs } = useContext(AppContext)
+    const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics(currentTopic)
+
     const [newTopicName, setNewTopicName] = useState('')
     const { notes, setNotes, createNote, deleteNote } = useNotes(currentTopic)
 
     useEffect(() => {
-        getAllTabs().then(setAllTabs)
-    }, [setAllTabs]);
+        getChildTopics(currentTopic).then(setTopics)
+        if (currentTopic !== 0) getNotesForTopic(currentTopic).then(setNotes)
+    }, [currentTopic])
 
     function setAsTab(topic) {
         console.log('new tab:', topic)
@@ -51,7 +49,7 @@ export default function AppContent() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
             >
-                <Tab key='tab-0' tab={{id: 0, name: 'All', order_index: 0, topic_id: null}} />
+                <Tab key='tab-0' tab={{ id: 0, name: 'All', order_index: 0, topic_id: null }} />
 
                 {allTabs && allTabs.map(tab =>
                     <Tab key={`tab-${tab.id}`} tab={tab} />
@@ -62,7 +60,7 @@ export default function AppContent() {
                 style={styles.scroll}
                 contentContainerStyle={[
                     styles.scrollContent,
-                    { 
+                    {
                         paddingBottom: bottomPadding + 80
                     }
                 ]}
@@ -77,24 +75,24 @@ export default function AppContent() {
                     <Text>Загрузка...</Text>
                 )}
                 {notes && notes.map(note => (
-                                <Note note={note} deleteNote={deleteNote} key={note.id} />
-                            ))}
+                    <Note note={note} deleteNote={deleteNote} key={note.id} />
+                ))}
             </ScrollView>
             <View style={[
-        styles.inputContainer,
-        { marginBottom: bottomPadding }
-      ]}>
-        <TextInput
-          style={
-            styles.inputContainer}
-          value={newTopicName}
-          onChangeText={setNewTopicName}
-        />
-        <Button
-          title="create topic"
-          onPress={() => newTopicName && createTopic(0, newTopicName)}
-        />
-      </View>
+                styles.inputContainer,
+                { marginBottom: bottomPadding }
+            ]}>
+                <TextInput
+                    style={
+                        styles.inputContainer}
+                    value={newTopicName}
+                    onChangeText={setNewTopicName}
+                />
+                <Button
+                    title="create topic"
+                    onPress={() => newTopicName && createTopic(0, newTopicName)}
+                />
+            </View>
         </View>
     );
 }
