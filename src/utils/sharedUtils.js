@@ -1,7 +1,7 @@
 
 
 export function formatDate(str) {
-    const date = new Date(str)
+    const date = new Date(Number(str) * 1000)
     const year = date.getFullYear()
     const month = date.getMonth().toString().padStart(2, '0')
     const day = date.getDay().toString().padStart(2, '0')
