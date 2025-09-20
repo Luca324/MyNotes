@@ -34,18 +34,10 @@ const styles = StyleSheet.create({
     note: {
         width: "100%",
         backgroundColor: '#ffffff',
-        borderRadius: 5,
+        borderRadius: 10,
         marginVertical: 2,
         marginHorizontal: 2,
         padding: 5,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-        elevation: 3,
     },
     header: {
         flexDirection: 'row',

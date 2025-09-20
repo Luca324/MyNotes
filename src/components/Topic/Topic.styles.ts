@@ -4,18 +4,10 @@ export const styles = StyleSheet.create({
   topic: {
     width: '100%',
     backgroundColor: '#ffffff',
-    borderRadius: 12,
+    borderRadius: 10,
     marginVertical: 2,
     marginHorizontal: 2,
     padding: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
   },
 
   topicHeader: {
