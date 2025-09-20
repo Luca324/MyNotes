@@ -53,4 +53,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
+  modalButton: {
+    backgroundColor: 'white',
+    color: 'black',
+    padding: 4,
+    borderRadius: 10,
+  }
 })

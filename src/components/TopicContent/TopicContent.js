@@ -22,7 +22,7 @@ export default function TopicContent({ topic, deleteTopic, depth }) {
     return (
         <View style={styles.topicContent}>
             {subtopics && subtopics.map(subtopic => (
-                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
+                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth+1}/>
             ))}
             {notes && notes.map(note => (
                 <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />
