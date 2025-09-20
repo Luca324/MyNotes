@@ -68,6 +68,7 @@ export default function NoteEditor({creating = true}) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 36,
     flex: 1,
     width: '100%',
     height: '100%',

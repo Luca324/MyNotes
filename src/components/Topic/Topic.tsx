@@ -9,6 +9,8 @@ import {
   Button,
 } from 'react-native'
 
+import { Link } from 'expo-router'
+
 import { getDepthColor, getTextColor } from 'colorSchemes'
 
 import { AddCircle } from '@/components/Icons/AddCircle'
@@ -98,6 +100,14 @@ export default function Topic({
             <Text>Закрепить</Text>
           </Pressable>
         )}
+        <Link
+          href={{ pathname: '/noteEditor', params: { topicId: id } }}
+          asChild
+        >
+          <Pressable style={styles.modalButton}>
+            <Text>Добавить заметку</Text>
+          </Pressable>
+        </Link>
       </Modal>
     </View>
   )

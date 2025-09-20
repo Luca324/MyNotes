@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { StyleSheet, View, Pressable } from 'react-native'
 
-import { useRouter, Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import { AddCircle } from '@/components/Icons/AddCircle'
 import Note from '@/components/Note/Note'
@@ -10,7 +10,6 @@ import Topic from '@/components/Topic/Topic'
 import { useTopics, useNotes } from '@/hooks/useNotes'
 import TextInput from '@/shared/TextInput'
 
-import { WriteANote } from '../Icons/WriteANote'
 
 export default function TopicContent({ topic, deleteTopic, depth }) {
     const router = useRouter();
@@ -35,11 +34,6 @@ export default function TopicContent({ topic, deleteTopic, depth }) {
                     styles={styles.input}
                 ></TextInput>
 
-                <Link href={{ pathname: '/noteEditor', params: { topicId: id } }} asChild>
-                    <Pressable style={styles.addNote}>
-                        <WriteANote />
-                    </Pressable>
-                </Link>
                 <Pressable onPress={() => createSubtopic(id, newNoteText)} style={styles.addNote}>
                     <AddCircle />
                 </Pressable>
