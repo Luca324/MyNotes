@@ -7,14 +7,14 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 2,
     marginHorizontal: 2,
-    padding: 10,
+    paddingHorizontal: 8,
   },
 
   topicHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 2,
+    marginVertical: 8,
     gap: 8,
   },
   idText: {

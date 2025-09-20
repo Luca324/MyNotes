@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginVertical: 2,
     marginHorizontal: 2,
-    padding: 5,
+    padding: 10,
+    elevation: 3,
   },
   header: {
     flexDirection: 'row',
