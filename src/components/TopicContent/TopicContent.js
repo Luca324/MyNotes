@@ -12,7 +12,7 @@ import TextInput from '@/shared/TextInput'
 
 import { WriteANote } from '../Icons/WriteANote'
 
-export default function TopicContent({ topic, deleteTopic }) {
+export default function TopicContent({ topic, deleteTopic, depth }) {
     const router = useRouter();
     const { id, name } = topic
     const [newNoteText, setNewNoteText] = useState('')
@@ -22,7 +22,7 @@ export default function TopicContent({ topic, deleteTopic }) {
     return (
         <View style={styles.topicContent}>
             {subtopics && subtopics.map(subtopic => (
-                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} />
+                <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth+1}/>
             ))}
             {notes && notes.map(note => (
                 <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />

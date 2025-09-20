@@ -68,7 +68,6 @@ export function useNotes(topicId = 0) {
 
   useEffect(() => {
     getNotesForTopic(topicId).then((res: Note[]) => {
-      console.log(`getting notes for topic ${topicId}`, res)
       setNotes(res)
     })
   }, [topicId])

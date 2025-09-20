@@ -31,22 +31,26 @@ export default function Tab({ tab }: TabProps) {
   }, [currentTopic])
 
   return (
-    <Pressable style={[styles.container, isActive && styles.active]} onPress={() => setCurrentTopic(tab.id)}>
-      <Text>{tab.name}</Text>
+    <Pressable style={styles.container} onPress={() => setCurrentTopic(tab.id)}>
+      <Text style={[isActive && styles.active]}>{tab.name}</Text>
     </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 30,
-    padding: 5,
+    height: 36,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
     margin: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: 'black',
+    backgroundColor: 'white',
+    borderRadius: 8
   },
   active: {
-    borderBottomWidth: 3,
-
+    fontWeight: 'bold'
+  },
+  nameText: {
+    fontSize: 16,
+    fontWeight: 'normal'
   }
 })

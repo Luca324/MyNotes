@@ -100,7 +100,7 @@ export default function AppContent() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: '#F4F4F4',
     },
     tabsScroll: {
         maxHeight: 50,
