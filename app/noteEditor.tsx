@@ -52,13 +52,13 @@ export default function NoteEditor({creating = true}) {
     <View style={styles.container}>
       <TextInput
         value={title}
-        onChangeText={setTitle}
+        setValue={setTitle}
         styles={styles.titleInput}
         placeholder="Заголовок"
       />
       <TextInput
         value={content}
-        onChangeText={setContent}
+        setValue={setContent}
         styles={styles.contentInput}
         placeholder="Текст"
       />

@@ -135,7 +135,7 @@ export default function Topic({
             <View style={styles.inputContainer}>
               <TextInput
                 value={newSubtopicName}
-                onChangeText={setNewSubtopicName}
+                setValue={setNewSubtopicName}
                 styles={styles.input}
               />
 

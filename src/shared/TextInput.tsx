@@ -1,39 +1,52 @@
-import { StyleSheet, TextInput as Input, TextInputProps as RNTextInputProps, StyleProp, TextStyle } from "react-native";
+import { useEffect, useMemo } from 'react'
+
+import {
+  StyleSheet,
+  TextInput as Input,
+  TextInputProps as RNTextInputProps,
+  StyleProp,
+  TextStyle,
+} from 'react-native'
 
 interface TextInputProps extends RNTextInputProps {
-  value: string;
-  onChangeText: (text: string) => void;
-  styles?: StyleProp<TextStyle>;
-  defaultValue?: string;
+  value: string
+  setValue: (text: string) => void
+  styles?: StyleProp<TextStyle>
+  defaultValue?: string
 }
 
 export default function TextInput({
   value,
-  onChangeText,
+  setValue,
   styles = defaultStyles.input,
-  defaultValue = "",
-  placeholder=""
+  defaultValue = '',
+  placeholder = '',
 }: TextInputProps) {
+  useMemo(() => {
+    // очищение при ререндере
+    setValue('')
+  }, [])
+
   return (
     <Input
       multiline={true}
       style={styles}
       value={value}
-      onChangeText={onChangeText}
+      onChangeText={setValue}
       defaultValue={defaultValue}
       placeholder={placeholder}
     />
-  );
+  )
 }
 
 const defaultStyles = StyleSheet.create({
   input: {
     margin: 12,
     padding: 10,
-    width: "98%",
-    backgroundColor: "#F4F4F4",
+    width: '98%',
+    backgroundColor: '#F4F4F4',
     borderWidth: 0,
     borderRadius: 4,
     height: 35,
   },
-});
+})
