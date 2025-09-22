@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { 
   Modal as NativeModal, 
@@ -12,9 +12,17 @@ interface ModalProps {
   modalVisible: boolean;
   setModalVisible: (modalVisible: boolean) => void;
   children: React.ReactNode;
+  onClose?: (...args: any[]) => any;
 }
 
-export default function Modal({ modalVisible, setModalVisible, children }: ModalProps) {
+export default function Modal({ modalVisible, setModalVisible, children, onClose }: ModalProps) {
+useEffect(() => {
+  console.log('modalVisible:', modalVisible)
+if (onClose && modalVisible === false) {
+  onClose()
+}
+}, [modalVisible])
+
   return (
     <NativeModal
       animationType="slide"

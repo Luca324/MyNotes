@@ -20,7 +20,7 @@ export function useTopics(parentTopicId: number = 0, init: Topic[] = []) {
     })
   }, [parentTopicId])
 
-  function createTopic(
+  async function createTopic(
     parentId: number | null = null,
     topicName: string,
     orderIndex: number = 0
@@ -29,14 +29,7 @@ export function useTopics(parentTopicId: number = 0, init: Topic[] = []) {
       name: topicName,
       notes: [],
     }
-    createTopicDB(parentId, topicName, orderIndex).then((res) => {
-      console.log('res of creating topic', res)
-      console.log(
-        'parentId',
-        parentId,
-        'newTopicsList',
-        topics.concat({ ...newTopic, id: res } as unknown as Topic)
-      )
+    return createTopicDB(parentId, topicName, orderIndex).then((res) => {
       setTopics(topics.concat({ ...newTopic, id: res } as unknown as Topic))
     })
   }

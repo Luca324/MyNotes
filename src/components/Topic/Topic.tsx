@@ -52,7 +52,8 @@ export default function Topic({
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
-  const [subtopicVisible, setSubtopicVisible] = useState<boolean>(false)
+  const [createSubtopicVisible, setCreateSubtopicVisible] =
+    useState<boolean>(false)
 
   const onPress = () => {
     setIsExpanded(!isExpanded)
@@ -100,7 +101,7 @@ export default function Topic({
           depth={depth}
         />
       )}
-      <Modal modalVisible={modalVisible} setModalVisible={setModalVisible}>
+      <Modal modalVisible={modalVisible} setModalVisible={setModalVisible} onClose={() => setCreateSubtopicVisible(false)}>
         <Pressable onPress={deleteTopicAndTab} style={styles.modalButton}>
           <Text>Удалить</Text>
         </Pressable>
@@ -125,28 +126,33 @@ export default function Topic({
           </Pressable>
         </Link>
 
-          <Pressable
-            onPress={() => setSubtopicVisible(!subtopicVisible)}
-            style={styles.modalButton}
-          >
-            <Text style={subtopicVisible && styles.underline}>Создать подтему</Text>
-          </Pressable>
-          {subtopicVisible && (
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={newSubtopicName}
-                setValue={setNewSubtopicName}
-                styles={styles.input}
-              />
+        <Pressable
+          onPress={() => setCreateSubtopicVisible(!createSubtopicVisible)}
+          style={styles.modalButton}
+        >
+          <Text style={createSubtopicVisible && styles.underline}>
+            Создать подтему
+          </Text>
+        </Pressable>
+        {createSubtopicVisible && (
+          <View style={styles.inputContainer}>
+            <TextInput
+              value={newSubtopicName}
+              setValue={setNewSubtopicName}
+              styles={styles.input}
+            />
 
-              <Pressable
-                onPress={() => createSubtopic(id, newSubtopicName)}
-                style={styles.readyButton}
-          >
-            <Text>Готово</Text>
-          </Pressable>
-            </View>
-          )}
+            <Pressable
+              onPress={() => createSubtopic(id, newSubtopicName).then(() => {
+                setModalVisible(false)
+                // TODO показать сообщение об успехе
+              })}
+              style={styles.readyButton}
+            >
+              <Text>Готово</Text>
+            </Pressable>
+          </View>
+        )}
       </Modal>
     </View>
   )
