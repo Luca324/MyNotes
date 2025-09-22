@@ -1,27 +1,31 @@
 import React, { useEffect } from 'react'
 
-import { 
-  Modal as NativeModal, 
-  View, 
-  Text, 
+import {
+  Modal as NativeModal,
+  View,
+  Text,
   TouchableWithoutFeedback,
-  StyleSheet 
-} from "react-native";
+  StyleSheet,
+} from 'react-native'
 
 interface ModalProps {
-  modalVisible: boolean;
-  setModalVisible: (modalVisible: boolean) => void;
-  children: React.ReactNode;
-  onClose?: (...args: any[]) => any;
+  modalVisible: boolean
+  setModalVisible: (modalVisible: boolean) => void
+  children: React.ReactNode
+  onClose?: (...args: any[]) => any
 }
 
-export default function Modal({ modalVisible, setModalVisible, children, onClose }: ModalProps) {
-useEffect(() => {
-  console.log('modalVisible:', modalVisible)
-if (onClose && modalVisible === false) {
-  onClose()
-}
-}, [modalVisible])
+export default function Modal({
+  modalVisible,
+  setModalVisible,
+  children,
+  onClose,
+}: ModalProps) {
+  useEffect(() => {
+    if (onClose && modalVisible === false) {
+      onClose()
+    }
+  }, [modalVisible])
 
   return (
     <NativeModal
@@ -33,14 +37,12 @@ if (onClose && modalVisible === false) {
       <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>
-            <View style={styles.modalContainer}>
-              {children}
-            </View>
+            <View style={styles.modalContainer}>{children}</View>
           </TouchableWithoutFeedback>
         </View>
       </TouchableWithoutFeedback>
     </NativeModal>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -48,7 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)'
+    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContainer: {
     alignItems: 'center',
@@ -56,5 +58,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 10,
     width: 250,
-  }
-});
+  },
+})

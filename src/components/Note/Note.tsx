@@ -26,26 +26,28 @@ export default function Note({ note, deleteNote, topicId }: NoteProps) {
   }
 
   return (
-    <View style={styles.noteWrapper}>
+    <View style={styles.width100}>
       <Link
-        style={styles.noteLink}
+        style={styles.width100}
         href={{
           pathname: '/noteEditor',
           params: { topicId: topicId, noteId: note.id },
         }}
         asChild
       >
-        <View style={styles.note}>
-          <View style={styles.header}>
-            <Text style={styles.id}>id: {note.id}</Text>
-            <Text style={styles.id}>{formatDate(note.created_at)}</Text>
-            <Pressable onPress={openNoteSettings}>
-              <MoreVertical />
-            </Pressable>
+        <Pressable>
+          <View style={styles.note}>
+            <View style={styles.header}>
+              {/* <Text style={styles.id}>id: {note.id}</Text> */}
+              <Text style={styles.id}>{formatDate(note.created_at)}</Text>
+              <Pressable onPress={openNoteSettings}>
+                <MoreVertical />
+              </Pressable>
+            </View>
+            {note.title && <Text style={styles.title}>{note.title}</Text>}
+            {note.content && <Text>{note.content}</Text>}
           </View>
-          {note.title && <Text style={styles.title}>{note.title}</Text>}
-          {note.content && <Text>{note.content}</Text>}
-        </View>
+        </Pressable>
       </Link>
       <Modal modalVisible={modalVisible} setModalVisible={setModalVisible}>
         <Pressable
@@ -60,10 +62,7 @@ export default function Note({ note, deleteNote, topicId }: NoteProps) {
 }
 
 const styles = StyleSheet.create({
-  noteWrapper: {
-    width: '100%',
-  },
-  noteLink: {
+  width100: {
     width: '100%',
   },
   note: {

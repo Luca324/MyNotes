@@ -88,7 +88,7 @@ export default function Topic({
       >
         <Text style={[styles.nameText, { color }]}>{name}</Text>
         <View style={styles.horizontal}>
-          <Text style={styles.idText}>id: {id}</Text>
+          {/* <Text style={styles.idText}>id: {id}</Text> */}
           {isExpanded ? <ChevronUp /> : <ChevronDown />}
         </View>
       </TouchableOpacity>
