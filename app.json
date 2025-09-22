@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "MyNotes",
-    "slug": "MyNotes",
+    "slug": "MyHabits",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -37,6 +37,7 @@
       "eas": {
         "projectId": "62cc4c6e-8495-4936-b0df-437cff8ea91e"
       }
-    }
+    },
+    "owner": "tatyana000"
   }
 }
