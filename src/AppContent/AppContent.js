@@ -8,6 +8,7 @@ import Topic from '@components/Topic/Topic';
 import { useKeyboard } from '@react-native-community/hooks';
 
 import { AppContext } from '@/components/AppProvider';
+import { FilePlus } from '@/components/Icons/FilePlus';
 import Modal from '@/components/Modal/Modal';
 import Note from '@/components/Note/Note';
 import Tab from '@/components/Tab/Tab';
@@ -82,11 +83,10 @@ export default function AppContent() {
                     <Note note={note} deleteNote={deleteNote} key={note.id} />
                 ))}
             </ScrollView>
-
-            { currentTopic === 0 ? <></> : 
+            
             <Pressable style={styles.createTopic} onPress={() => setCreateTopicModalVisible(true)}>
-                <Text style={styles.createNoteText}>+</Text>
-            </Pressable>}
+                <FilePlus/>
+            </Pressable>
 
             { currentTopic === 0 ? <></> : 
             <Link style={styles.createNote}
