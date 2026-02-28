@@ -77,6 +77,9 @@ createNote(
 ```
 **Описание**: Создает новую заметку в указанной теме  
 **Возвращает**: ID созданной заметки  
+**Особенности**:
+- Пустые строки для `title` и `content` автоматически преобразуются в `null`
+- Если `title` пустой или содержит только пробелы, сохраняется как `null`
 **Пример**:
 ```typescript
 const noteId = await createNote(1, "Содержимое заметки", "Заголовок", 0);
@@ -144,12 +147,22 @@ addTab(
 
 ---
 
+### removeTab
+```typescript
+removeTab(topicId: number): Promise<void>
+```
+**Описание**: Удаляет тему из вкладок (открепляет)  
+**Параметры**: `topicId` - ID темы для открепления
+
+---
+
 ### getAllTabs
 ```typescript
 getAllTabs(): Promise<Topic[]>
 ```
 **Описание**: Получает все закрепленные вкладки  
-**Возвращает**: Массив тем-вкладок с JOIN к таблице topics, отсортированных по `order_index`
+**Возвращает**: Массив тем-вкладок с JOIN к таблице topics, отсортированных по `order_index`  
+**Примечание**: Возвращает полные объекты Topic с полями: id, name, parent_id, order_index, created_at
 
 ---
 
@@ -237,5 +250,8 @@ await addTab(rootId, 0);
 
 // Получаем все вкладки
 const tabs = await getAllTabs();
+
+// Открепляем вкладку
+await removeTab(rootId);
 ```
 
