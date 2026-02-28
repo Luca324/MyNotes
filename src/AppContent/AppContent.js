@@ -61,10 +61,10 @@ export default function AppContent() {
                 horizontal
                 showsHorizontalScrollIndicator={false}
             >
-                <Tab key='tab-0' tab={{ id: 0, name: 'All', order_index: 0, topic_id: null }} />
+                <Tab key='tab-0' tab={{ id: 0, name: 'All', order_index: 0, topic_id: null }} deleteTopic={() => {}} />
 
                 {allTabs && allTabs.map(tab =>
-                    <Tab key={`tab-${tab.id}`} tab={tab} />
+                    <Tab key={`tab-${tab.id}`} tab={tab} deleteTopic={deleteTopic} />
                 )}
             </ScrollView>
 

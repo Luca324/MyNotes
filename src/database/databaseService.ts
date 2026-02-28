@@ -93,12 +93,17 @@ export const addTab = async (
 
 export const getAllTabs = async (): Promise<Topic[]> => {
   const query = `
-    SELECT t.*, topics.name
+    SELECT topics.id, topics.name, topics.parent_id, topics.order_index, topics.created_at
     FROM tabs t
     INNER JOIN topics ON t.topic_id = topics.id
     ORDER BY t.order_index ASC;
   `
   return await executeQuery(query)
+}
+
+export const removeTab = async (topicId: number): Promise<void> => {
+  const query = `DELETE FROM tabs WHERE topic_id = ?;`
+  await executeQuery(query, [topicId])
 }
 
 // Дополнительные функции

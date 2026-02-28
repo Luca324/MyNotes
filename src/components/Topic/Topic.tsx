@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react'
+import { useContext, useState, useEffect, useMemo } from 'react'
 
 import {
   StyleSheet,
@@ -16,12 +16,12 @@ import { getDepthColor, getTextColor } from 'colorSchemes'
 import { AddCircle } from '@/components/Icons/AddCircle'
 import { Trash } from '@/components/Icons/Trash'
 import Modal from '@/components/Modal/Modal'
+import Note from '@/components/Note/Note'
 import { useTopics, useNotes } from '@/hooks/useNotes'
 import TextInput from '@/shared/TextInput'
 import type { Topic as TopicType } from '@/types'
-import Note from '@/components/Note/Note'
 
-import { addTab } from '../../database/databaseService'
+import { addTab, removeTab, getAllTabs } from '../../database/databaseService'
 import { AppContext } from '../AppProvider'
 import { ChevronDown } from '../Icons/ChevronDown'
 import { ChevronUp } from '../Icons/ChevronUp'
@@ -44,7 +44,7 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic }: {
         <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth + 1} />
       ))}
       {notes && notes.map(note => (
-        <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />
+        <Note key={note.id} note={note} topicId={id} deleteNote={deleteNote} />
       ))}
     </View>
   )
@@ -73,7 +73,6 @@ export default function Topic({
 
   const backgroundColor = getDepthColor(depth)
   const color = getTextColor(depth)
-  console.log('depth, color', depth, color)
 
   const { id, name } = topic
   const { allTabs, setAllTabs } = useContext(AppContext)
@@ -96,10 +95,17 @@ export default function Topic({
 
   function deleteTopicAndTab() {
     deleteTopic(id)
-    if (isTab) setAllTabs(allTabs.filter((tab) => tab.id !== id))
+    if (isTab) {
+      removeTab(id).then(() => {
+        getAllTabs().then(setAllTabs)
+      })
+    }
   }
 
-  const isTab = allTabs.filter((tab) => tab.id === id).length
+  // Пересчитываем isTab при изменении allTabs
+  const isTab = useMemo(() => {
+    return allTabs.some((tab) => tab.id === id)
+  }, [allTabs, id])
 
   function openTopicSettings() {
     console.log(openTopicSettings)
@@ -140,11 +146,25 @@ export default function Topic({
         <Pressable onPress={deleteTopicAndTab} style={styles.modalButton}>
           <Text>Удалить</Text>
         </Pressable>
-        {!isTab && (
+        {isTab ? (
+          <Pressable
+            onPress={() => {
+              removeTab(id).then(() => {
+                getAllTabs().then(setAllTabs)
+                setModalVisible(false)
+              })
+            }}
+            style={styles.modalButton}
+          >
+            <Text>Открепить</Text>
+          </Pressable>
+        ) : (
           <Pressable
             onPress={() => {
               addTab(id).then(() => {
+                getAllTabs().then(setAllTabs)
                 if (setAsTab) setAsTab(topic)
+                setModalVisible(false)
               })
             }}
             style={styles.modalButton}
