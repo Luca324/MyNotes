@@ -24,8 +24,8 @@ export const getDBConnection = async () => {
     await createTables(db)
     return db
   } catch (error) {
-    // console.error('Ошибка при открытии/создании БД:', error)
-    // throw error // Пробрасываем ошибку выше, чтобы обработать её в UI
+    console.error('Ошибка при открытии/создании БД:', error)
+    throw error // Пробрасываем ошибку выше, чтобы обработать её в UI
   }
 }
 
