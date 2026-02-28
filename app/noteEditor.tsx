@@ -14,29 +14,41 @@ export default function NoteEditor({creating = true}) {
   const params = useLocalSearchParams()
   const topicId = params.topicId ? Number(params.topicId) : undefined
   const paramsNoteId = params.noteId ? Number(params.noteId) : undefined
+  // Проверяем параметр isTask из роутера (может быть строкой 'true' или boolean)
+  const paramsIsTask = params.isTask === 'true' || params.isTask === true || (Array.isArray(params.isTask) && params.isTask[0] === 'true')
   const [noteId, setNoteId] = useState<number | undefined>(paramsNoteId )
 
   const [exists, setExists] = useState<boolean>(false)
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [isTask, setIsTask] = useState<boolean>(paramsIsTask)
   const isCreatingRef = useRef<boolean>(false)
 
-  useMemo(() => {
+  useEffect(() => {
     if (!paramsNoteId) {
       // если NoteEditor был вызван для создания заметки, а не редактирования
       isCreatingRef.current = true
+      setIsTask(paramsIsTask)
     } else {
       isCreatingRef.current = false
+      setNoteId(paramsNoteId)
       getNoteById(paramsNoteId).then((note: Note | null) => {
-        setTitle(note?.title || '')
-        setContent(note?.content || '')
+        if (note) {
+          setTitle(note.title || '')
+          setContent(note.content || '')
+          // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
+          const noteIsTask = note.is_task === true || note.is_task === 1
+          setIsTask(noteIsTask)
+          setExists(true)
+        }
       })
     }
-  }, [noteId])
+  }, [paramsNoteId, paramsIsTask])
 
   useEffect(() => {
-    if (!exists && topicId && (title || content)) {
-      createNote(topicId, content, title).then((res) => {
+    if (!exists && topicId && (title || content) && !paramsNoteId) {
+      // Создаем новую заметку или задачу при первом вводе
+      createNote(topicId, content, title, 0, isTask, false).then((res) => {
         setExists(true)
         setNoteId(res)
       })
@@ -44,9 +56,11 @@ export default function NoteEditor({creating = true}) {
       // если NoteEditor был вызван для создания заметки, а не редактирования, то когда поля пустые - она удалчется. это гарантирует то что если человек передумал писать заметку, то не создастся пустая. тут еще есть над чем подмать: надо ли удалять если заметка редактировалась?
       deleteNote(noteId).then((res) => setExists(false))
     } else if (noteId) {
+      // Обновляем заметку при каждом изменении (и для новых, и для существующих)
       updateNote(noteId, content, title)
     }
-  }, [title, content, topicId, noteId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, content, topicId, noteId, isTask])
 
   return (
     <View style={styles.container}>

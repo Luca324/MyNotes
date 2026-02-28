@@ -161,7 +161,10 @@ export default function AppContent() {
                         const isTaskValue = note.is_task
                         // Проверяем все возможные варианты: true, 1, '1'
                         const isTask = isTaskValue === true || isTaskValue === 1 || String(isTaskValue) === '1'
-                        return Boolean(isTask)
+                        if (isTask) {
+                            console.log('AppContent: Found task:', note.id, 'is_task:', isTaskValue, 'done:', note.done)
+                        }
+                        return !!isTask
                     })
                     const regularNotes = notes.filter(note => {
                         const isTaskValue = note.is_task
