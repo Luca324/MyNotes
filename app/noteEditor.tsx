@@ -44,31 +44,21 @@ export default function NoteEditor({creating = true}) {
   }, [paramsNoteId])
 
   useEffect(() => {
-    // Пропускаем выполнение, если данные еще загружаются
-    if (!paramsNoteId && !noteId && !title && !content) {
-      return
+    if (!exists && topicId && (title || content) && !paramsNoteId) {
+      // Создаем новую заметку при первом вводе
+      createNote(topicId, content, title).then((res) => {
+        setExists(true)
+        setNoteId(res)
+      })
+    } else if (!title && !content && noteId && isCreatingRef.current) {
+      // если NoteEditor был вызван для создания заметки, а не редактирования, то когда поля пустые - она удалчется. это гарантирует то что если человек передумал писать заметку, то не создастся пустая. тут еще есть над чем подмать: надо ли удалять если заметка редактировалась?
+      deleteNote(noteId).then((res) => setExists(false))
+    } else if (noteId) {
+      // Обновляем заметку при каждом изменении (и для новых, и для существующих)
+      updateNote(noteId, content, title)
     }
-
-    // Используем таймер для debounce, чтобы не создавать/обновлять заметку при каждом изменении
-    const timeoutId = setTimeout(() => {
-      if (!exists && topicId && (title || content) && !paramsNoteId) {
-        // Создаем новую заметку только если это не редактирование существующей
-        console.log('noteEditor - before createNote:', { topicId, title, content, titleLength: title?.length, contentLength: content?.length })
-        createNote(topicId, content || '', title || '').then((res) => {
-          setExists(true)
-          setNoteId(res)
-        })
-      } else if (!title && !content && noteId && isCreatingRef.current) {
-        // если NoteEditor был вызван для создания заметки, а не редактирования, то когда поля пустые - она удалчется. это гарантирует то что если человек передумал писать заметку, то не создастся пустая. тут еще есть над чем подмать: надо ли удалять если заметка редактировалась?
-        deleteNote(noteId).then((res) => setExists(false))
-      } else if (noteId && exists && paramsNoteId) {
-        // Обновляем существующую заметку только если она уже загружена
-        updateNote(noteId, content, title)
-      }
-    }, 500) // Задержка 500мс для debounce
-
-    return () => clearTimeout(timeoutId)
-  }, [title, content, topicId, noteId, exists, paramsNoteId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, content, topicId, noteId])
 
   return (
     <View style={styles.container}>

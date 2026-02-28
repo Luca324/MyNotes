@@ -64,13 +64,9 @@ export const createNote = async (
     VALUES (?, ?, ?, ?);
   `
   // Передаем null вместо пустой строки для title, если он пустой
-  const titleValue = title && title.trim() ? title.trim() : null
-  const params = [content || null, titleValue, topicId, orderIndex]
-  console.log('createNote - title received:', JSON.stringify(title))
-  console.log('createNote - titleValue:', JSON.stringify(titleValue))
-  console.log('createNote - params:', params.map(p => typeof p === 'string' ? JSON.stringify(p) : p))
-  const result = await executeQuery(query, params)
-  console.log('createNote - result:', result)
+  const titleValue = title && title.trim() ? title : null
+  const contentValue = content || null
+  const result = await executeQuery(query, [contentValue, titleValue, topicId, orderIndex])
   return result.lastInsertRowId
 }
 
@@ -82,9 +78,7 @@ export const getNotesForTopic = async (
     WHERE topic_id IS ?
     ORDER BY order_index ASC;
   `
-  const notes = await executeQuery(query, [parentTopicId])
-  console.log('getNotesForTopic - retrieved notes:', notes.map(n => ({ id: n.id, title: n.title, titleLength: n.title?.length })))
-  return notes
+  return await executeQuery(query, [parentTopicId])
 }
 
 // TABS

@@ -36,7 +36,13 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic }: {
   deleteSubtopic: (id: number) => void
 }) {
   const { id } = topic
-  const { notes, deleteNote } = useNotes(id)
+  const { notes, deleteNote, setNotes } = useNotes(id)
+
+  // Обновляем заметки при монтировании компонента (когда тема разворачивается)
+  useEffect(() => {
+    getNotesForTopic(id).then(setNotes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return (
     <View style={topicContentStyles.topicContent}>
@@ -120,6 +126,13 @@ export default function Topic({
   } = useTopics(id)
   const [newSubtopicName, setNewSubtopicName] = useState('')
   
+  // Обновляем подтемы при разворачивании темы
+  useEffect(() => {
+    if (isExpanded) {
+      getChildTopics(id).then(setSubtopics)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isExpanded, id])
 
   return (
     <View style={[styles.topic, { backgroundColor }]}>

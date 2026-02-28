@@ -1,8 +1,8 @@
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { StyleSheet, Text, View, ScrollView, Pressable, Button} from 'react-native';
 
-import {Link} from 'expo-router'
+import {Link, useFocusEffect} from 'expo-router'
 
 import Topic from '@components/Topic/Topic';
 import { useKeyboard } from '@react-native-community/hooks';
@@ -40,6 +40,16 @@ export default function AppContent() {
         getChildTopics(currentTopic).then(setTopics)
         if (currentTopic !== 0) getNotesForTopic(currentTopic).then(setNotes)
     }, [currentTopic])
+
+    // Обновляем данные при возврате на экран (например, после закрытия редактора заметок)
+    useFocusEffect(
+        React.useCallback(() => {
+            getChildTopics(currentTopic).then(setTopics)
+            if (currentTopic !== 0) {
+                getNotesForTopic(currentTopic).then(setNotes)
+            }
+        }, [currentTopic])
+    )
 
     // Очищаем поле при открытии модального окна
     useEffect(() => {
