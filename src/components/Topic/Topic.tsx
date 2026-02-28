@@ -21,7 +21,7 @@ import { useTopics, useNotes } from '@/hooks/useNotes'
 import TextInput from '@/shared/TextInput'
 import type { Topic as TopicType } from '@/types'
 
-import { addTab, removeTab, getAllTabs } from '../../database/databaseService'
+import { addTab, removeTab, getAllTabs, getChildTopics, getNotesForTopic } from '../../database/databaseService'
 import { AppContext } from '../AppProvider'
 import { ChevronDown } from '../Icons/ChevronDown'
 import { ChevronUp } from '../Icons/ChevronUp'
@@ -116,8 +116,10 @@ export default function Topic({
     topics: subtopics,
     createTopic: createSubtopic,
     deleteTopic: deleteSubtopic,
+    setTopics: setSubtopics,
   } = useTopics(id)
   const [newSubtopicName, setNewSubtopicName] = useState('')
+  
 
   return (
     <View style={[styles.topic, { backgroundColor }]}>

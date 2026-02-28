@@ -25,12 +25,11 @@ export function useTopics(parentTopicId: number = 0, init: Topic[] = []) {
     topicName: string,
     orderIndex: number = 0
   ) {
-    const newTopic = {
-      name: topicName,
-      notes: [],
-    }
-    return createTopicDB(parentId, topicName, orderIndex).then((res) => {
-      setTopics(topics.concat({ ...newTopic, id: res } as unknown as Topic))
+    return createTopicDB(parentId, topicName, orderIndex).then(async (res) => {
+      // Перезагружаем список подтем из БД для актуальности данных
+      const updatedTopics = await getChildTopics(parentTopicId)
+      setTopics(updatedTopics)
+      return res
     })
   }
 
@@ -66,13 +65,12 @@ export function useNotes(topicId = 0) {
   }, [topicId])
 
   function createNote(topicId: number, text: string) {
-    const newNote: Note = {
-      content: text,
-      created_at: Date.now(),
-    }
-    createNoteDB(topicId, text).then((res) => {
+    return createNoteDB(topicId, text).then(async (res) => {
       console.log('res of creating note for', topicId, res)
-      setNotes(notes.concat({ ...newNote, id: res }))
+      // Перезагружаем список заметок из БД для актуальности данных
+      const updatedNotes = await getNotesForTopic(topicId)
+      setNotes(updatedNotes)
+      return res
     })
   }
 
