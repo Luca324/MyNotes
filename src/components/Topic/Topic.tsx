@@ -17,9 +17,10 @@ import { AddCircle } from '@/components/Icons/AddCircle'
 import { Trash } from '@/components/Icons/Trash'
 import Modal from '@/components/Modal/Modal'
 import Note from '@/components/Note/Note'
+import Task from '@/components/Task/Task'
 import { useTopics, useNotes } from '@/hooks/useNotes'
 import TextInput from '@/shared/TextInput'
-import type { Topic as TopicType } from '@/types'
+import type { Topic as TopicType, Note as NoteType } from '@/types'
 
 import { addTab, removeTab, getAllTabs, getChildTopics, getNotesForTopic } from '../../database/databaseService'
 import { AppContext } from '../AppProvider'
@@ -27,6 +28,49 @@ import { ChevronDown } from '../Icons/ChevronDown'
 import { ChevronUp } from '../Icons/ChevronUp'
 
 import { styles } from './Topic.styles'
+
+// Компонент для отображения выполненных задач
+function CompletedTasksGroup({ 
+  completedTasks, 
+  topicId, 
+  deleteTask, 
+  toggleTaskDone 
+}: {
+  completedTasks: NoteType[]
+  topicId: number
+  deleteTask: (id: number) => void
+  toggleTaskDone: (taskId: number, done: boolean) => void
+}) {
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  if (completedTasks.length === 0) return null
+
+  return (
+    <View style={completedTasksStyles.container}>
+      <TouchableOpacity
+        onPress={() => setIsExpanded(!isExpanded)}
+        activeOpacity={0.8}
+        style={completedTasksStyles.header}
+      >
+        <Text style={completedTasksStyles.headerText}>Выполненные задачи</Text>
+        {isExpanded ? <ChevronUp /> : <ChevronDown />}
+      </TouchableOpacity>
+      {isExpanded && (
+        <View style={completedTasksStyles.content}>
+          {completedTasks.map(task => (
+            <Task
+              key={task.id}
+              task={task}
+              topicId={topicId}
+              deleteTask={deleteTask}
+              toggleTaskDone={toggleTaskDone}
+            />
+          ))}
+        </View>
+      )}
+    </View>
+  )
+}
 
 // Локальный компонент TopicContent для избежания require cycle
 function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpanded }: {
@@ -37,7 +81,7 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpa
   isExpanded: boolean
 }) {
   const { id } = topic
-  const { notes, deleteNote, setNotes } = useNotes(id)
+  const { notes, deleteNote, setNotes, toggleTaskDone } = useNotes(id)
 
   // Обновляем заметки при монтировании компонента и при каждом разворачивании темы
   // Это гарантирует, что новые заметки будут видны сразу после создания
@@ -48,14 +92,52 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isExpanded])
 
+  // Разделяем заметки на задачи и обычные заметки
+  // SQLite возвращает числа (0/1), поэтому проверяем truthy значения
+  const tasks = notes.filter(note => {
+    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
+    return note.is_task === true || note.is_task === 1
+  })
+  const regularNotes = notes.filter(note => {
+    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
+    return !note.is_task || note.is_task === 0 || note.is_task === false
+  })
+  
+  const incompleteTasks = tasks.filter(task => {
+    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
+    return !task.done || task.done === 0 || task.done === false
+  })
+  const completedTasks = tasks.filter(task => {
+    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
+    return task.done === true || task.done === 1
+  })
+
   return (
     <View style={topicContentStyles.topicContent}>
       {subtopics && subtopics.map(subtopic => (
         <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth + 1} />
       ))}
-      {notes && notes.map(note => (
+      {/* Невыполненные задачи */}
+      {incompleteTasks && incompleteTasks.map(task => (
+        <Task 
+          key={task.id} 
+          task={task} 
+          topicId={id} 
+          deleteTask={deleteNote} 
+          toggleTaskDone={toggleTaskDone}
+        />
+      ))}
+      {/* Обычные заметки */}
+      {regularNotes && regularNotes.map(note => (
         <Note key={note.id} note={note} topicId={id} deleteNote={deleteNote} />
       ))}
+      {/* Выполненные задачи */}
+      <CompletedTasksGroup
+        completedTasks={completedTasks}
+        topicId={id}
+        deleteTask={deleteNote}
+        toggleTaskDone={toggleTaskDone}
+      />
     </View>
   )
 }
@@ -63,6 +145,31 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpa
 const topicContentStyles = StyleSheet.create({
   topicContent: {
     width: '100%',
+  },
+})
+
+const completedTasksStyles = StyleSheet.create({
+  container: {
+    width: '100%',
+    marginTop: 8,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    marginVertical: 4,
+  },
+  headerText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#666',
+  },
+  content: {
+    width: '100%',
+    marginTop: 4,
   },
 })
 
@@ -201,6 +308,14 @@ export default function Topic({
         >
           <Pressable style={styles.modalButton}>
             <Text>Добавить заметку</Text>
+          </Pressable>
+        </Link>
+        <Link
+          href={{ pathname: '/noteEditor', params: { topicId: id, isTask: 'true' } }}
+          asChild
+        >
+          <Pressable style={styles.modalButton}>
+            <Text>Добавить задачу</Text>
           </Pressable>
         </Link>
 

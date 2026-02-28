@@ -38,6 +38,8 @@
 | `content` | TEXT | Содержимое заметки |
 | `order_index` | REAL NOT NULL DEFAULT 0 | Порядок сортировки |
 | `created_at` | INTEGER | Unix timestamp создания |
+| `is_task` | BOOLEAN DEFAULT 0 | Флаг, является ли запись задачей (0 = заметка, 1 = задача) |
+| `done` | BOOLEAN DEFAULT 0 | Флаг выполнения задачи (0 = не выполнена, 1 = выполнена, актуально только для задач) |
 
 **Особенности**:
 - FOREIGN KEY на `topics(id)` с ON DELETE CASCADE
@@ -76,6 +78,8 @@ CREATE TABLE IF NOT EXISTS notes (
   content TEXT,
   order_index REAL NOT NULL DEFAULT 0,
   created_at INTEGER DEFAULT (strftime('%s', 'now')),
+  is_task BOOLEAN DEFAULT 0,
+  done BOOLEAN DEFAULT 0,
   FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
 );
 
@@ -96,10 +100,11 @@ CREATE TABLE IF NOT EXISTS tabs (
 - `deleteTopic(topicId)` - удаление темы
 
 ### Работа с заметками
-- `createNote(topicId, content, title, orderIndex)` - создание заметки
+- `createNote(topicId, content, title, orderIndex, isTask?, done?)` - создание заметки или задачи
 - `getNotesForTopic(parentTopicId)` - получение заметок темы
 - `getNoteById(noteId)` - получение заметки по ID
-- `updateNote(noteId, content?, title?)` - обновление заметки
+- `updateNote(noteId, content?, title?, done?)` - обновление заметки
+- `toggleTaskDone(taskId, done)` - переключение статуса выполнения задачи
 - `deleteNote(noteId)` - удаление заметки
 
 ### Работа с вкладками

@@ -77,6 +77,8 @@ const createTables = async (database) => {
       content TEXT,
       order_index REAL NOT NULL DEFAULT 0,
       created_at INTEGER DEFAULT (strftime('%s', 'now')),
+      is_task BOOLEAN DEFAULT 0,
+      done BOOLEAN DEFAULT 0,
       FOREIGN KEY (topic_id) REFERENCES topics (id) ON DELETE CASCADE
     );
   `
@@ -95,6 +97,21 @@ const createTables = async (database) => {
     database.execSync(queryTopics)
     database.execSync(queryNotes)
     database.execSync(queryTabs)
+    
+    // Миграция: добавляем поля is_task и done для существующих БД
+    try {
+      database.execSync('ALTER TABLE notes ADD COLUMN is_task BOOLEAN DEFAULT 0;')
+    } catch (error) {
+      // Поле уже существует, игнорируем ошибку
+      console.log('Поле is_task уже существует или таблица не существует')
+    }
+    
+    try {
+      database.execSync('ALTER TABLE notes ADD COLUMN done BOOLEAN DEFAULT 0;')
+    } catch (error) {
+      // Поле уже существует, игнорируем ошибку
+      console.log('Поле done уже существует или таблица не существует')
+    }
   } catch (error) {
     console.error('Ошибка при создании таблиц:', error)
     throw error

@@ -12,6 +12,7 @@ import { FilePlus } from '@/components/Icons/FilePlus';
 import Modal from '@/components/Modal/Modal';
 import Note from '@/components/Note/Note';
 import Tab from '@/components/Tab/Tab';
+import Task from '@/components/Task/Task';
 import { getChildTopics, getNotesForTopic } from '@/database/databaseService';
 import { useNotes, useTopics } from '@/hooks/useNotes';
 import TextInput from '@/shared/TextInput';
@@ -32,13 +33,14 @@ export default function AppContent() {
     const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics(currentTopic)
 
     const [newTopicName, setNewTopicName] = useState('')
-    const { notes, setNotes, createNote, deleteNote } = useNotes(currentTopic)
+    const { notes, setNotes, createNote, deleteNote, toggleTaskDone } = useNotes(currentTopic)
 
     const [createTopicModalVisible, setCreateTopicModalVisible] = useState(false)
 
     useEffect(() => {
         getChildTopics(currentTopic).then(setTopics)
         if (currentTopic !== 0) getNotesForTopic(currentTopic).then(setNotes)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentTopic])
 
     // Обновляем данные при возврате на экран (например, после закрытия редактора заметок)
@@ -48,6 +50,7 @@ export default function AppContent() {
             if (currentTopic !== 0) {
                 getNotesForTopic(currentTopic).then(setNotes)
             }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [currentTopic])
     )
 
@@ -151,9 +154,60 @@ export default function AppContent() {
                 ) : (
                     <Text>Загрузка...</Text>
                 )}
-                {notes && notes.map(note => (
-                    <Note note={note} deleteNote={deleteNote} key={note.id} />
-                ))}
+                {(() => {
+                    // Разделяем заметки на задачи и обычные заметки
+                    const tasks = notes.filter(note => {
+                        const isTask = note.is_task === true || note.is_task === 1 || String(note.is_task) === '1'
+                        return !!isTask
+                    })
+                    const regularNotes = notes.filter(note => {
+                        const isTask = note.is_task === true || note.is_task === 1 || String(note.is_task) === '1'
+                        return !isTask
+                    })
+                    
+                    const incompleteTasks = tasks.filter(task => {
+                        const isDone = task.done === true || task.done === 1 || String(task.done) === '1'
+                        return !isDone
+                    })
+                    const completedTasks = tasks.filter(task => {
+                        const isDone = task.done === true || task.done === 1 || String(task.done) === '1'
+                        return !!isDone
+                    })
+                    
+                    return (
+                        <>
+                            {/* Невыполненные задачи */}
+                            {incompleteTasks && incompleteTasks.map(task => (
+                                <Task 
+                                    key={task.id} 
+                                    task={task} 
+                                    topicId={currentTopic} 
+                                    deleteTask={deleteNote} 
+                                    toggleTaskDone={toggleTaskDone}
+                                />
+                            ))}
+                            {/* Обычные заметки */}
+                            {regularNotes && regularNotes.map(note => (
+                                <Note note={note} deleteNote={deleteNote} key={note.id} topicId={currentTopic} />
+                            ))}
+                            {/* Выполненные задачи */}
+                            {completedTasks.length > 0 && (
+                                <View style={styles.completedTasksContainer}>
+                                    <Text style={styles.completedTasksHeader}>Выполненные задачи</Text>
+                                    {completedTasks.map(task => (
+                                        <Task 
+                                            key={task.id} 
+                                            task={task} 
+                                            topicId={currentTopic} 
+                                            deleteTask={deleteNote} 
+                                            toggleTaskDone={toggleTaskDone}
+                                        />
+                                    ))}
+                                </View>
+                            )}
+                        </>
+                    )
+                })()}
                 </ScrollView>
             </View>
             
@@ -162,6 +216,7 @@ export default function AppContent() {
             </Pressable>
 
             { currentTopic === 0 ? <></> : 
+            <>
             <Link style={styles.createNote}
                       href={{ pathname: '/noteEditor', params: { topicId: currentTopic } }}
                       asChild
@@ -169,7 +224,16 @@ export default function AppContent() {
             <Pressable>
                 <Text style={styles.createNoteText}>+</Text>
             </Pressable>
-            </Link>}
+            </Link>
+            <Link style={styles.createTask}
+                      href={{ pathname: '/noteEditor', params: { topicId: currentTopic, isTask: 'true' } }}
+                      asChild
+                    >
+            <Pressable>
+                <Text style={styles.createTaskText}>✓</Text>
+            </Pressable>
+            </Link>
+            </>}
 
             {createTopicModalVisible && <Modal modalVisible={createTopicModalVisible} setModalVisible={setCreateTopicModalVisible}>
                 <TextInput
@@ -246,5 +310,35 @@ const styles = StyleSheet.create({
         backgroundColor: '#818cf8',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    createTask: {
+        width: 50,
+        height: 50,
+        borderRadius: '50%',
+        position: 'absolute',
+        bottom: 40,
+        right: '50%',
+        marginRight: -25,
+        backgroundColor: '#10b981',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    createTaskText: {
+        color: 'white',
+        fontSize: 24
+    },
+    completedTasksContainer: {
+        width: '100%',
+        marginTop: 16,
+        paddingTop: 12,
+        borderTopWidth: 1,
+        borderTopColor: '#e0e0e0',
+    },
+    completedTasksHeader: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#666',
+        marginBottom: 8,
+        paddingHorizontal: 4,
     },
 });

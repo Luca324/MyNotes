@@ -57,16 +57,18 @@ export const createNote = async (
   topicId: number,
   content: string,
   title: string = '',
-  orderIndex: number = 0
+  orderIndex: number = 0,
+  isTask: boolean = false,
+  done: boolean = false
 ): Promise<number> => {
   const query = `
-    INSERT INTO notes (content, title, topic_id, order_index)
-    VALUES (?, ?, ?, ?);
+    INSERT INTO notes (content, title, topic_id, order_index, is_task, done)
+    VALUES (?, ?, ?, ?, ?, ?);
   `
   // Передаем null вместо пустой строки для title, если он пустой
   const titleValue = title && title.trim() ? title : null
   const contentValue = content || null
-  const result = await executeQuery(query, [contentValue, titleValue, topicId, orderIndex])
+  const result = await executeQuery(query, [contentValue, titleValue, topicId, orderIndex, isTask ? 1 : 0, done ? 1 : 0])
   return result.lastInsertRowId
 }
 
@@ -119,7 +121,8 @@ export const getTopicById = async (topicId: number): Promise<Topic | null> => {
 export const updateNote = async (
   noteId: number,
   content?: string,
-  title?: string
+  title?: string,
+  done?: boolean
 ): Promise<void> => {
   // Собираем поля для обновления и параметры
   const updates: string[] = [];
@@ -135,6 +138,11 @@ export const updateNote = async (
     params.push(content);
   }
   
+  if (done !== undefined) {
+    updates.push('done = ?');
+    params.push(done ? 1 : 0);
+  }
+  
   if (updates.length === 0)  return
   
   // Добавляем noteId в параметры
@@ -144,6 +152,14 @@ export const updateNote = async (
   const result = await executeQuery(query, params);
   return result.lastInsertRowId
 
+}
+
+export const toggleTaskDone = async (
+  taskId: number,
+  done: boolean
+): Promise<void> => {
+  const query = `UPDATE notes SET done = ? WHERE id = ?;`
+  await executeQuery(query, [done ? 1 : 0, taskId])
 }
 
 export const deleteNote = async (noteId: number): Promise<void> => {

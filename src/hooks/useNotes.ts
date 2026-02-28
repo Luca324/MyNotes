@@ -8,6 +8,7 @@ import {
   deleteNote as deleteNoteDB,
   getNotesForTopic,
   getChildTopics,
+  toggleTaskDone as toggleTaskDoneDB,
 } from '../database/databaseService'
 import { Note, Topic } from '../types'
 
@@ -95,11 +96,20 @@ export function useNotes(topicId = 0) {
     })
   }
 
+  function toggleTaskDone(taskId: number, done: boolean) {
+    toggleTaskDoneDB(taskId, done).then(async () => {
+      // Перезагружаем список заметок из БД для актуальности данных
+      const updatedNotes = await getNotesForTopic(topicId)
+      setNotes(updatedNotes)
+    })
+  }
+
   return {
     notes,
     setNotes,
     createNote,
     updateNote,
     deleteNote,
+    toggleTaskDone,
   }
 }

@@ -18,6 +18,8 @@ export interface Note extends Timestamped {
   title?: string | null
   content?: string | null;
   order_index?: number;
+  is_task?: boolean;
+  done?: boolean;
 }
 
 // Тип для вкладки
