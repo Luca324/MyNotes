@@ -93,23 +93,36 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpa
   }, [id, isExpanded])
 
   // Разделяем заметки на задачи и обычные заметки
-  // SQLite возвращает числа (0/1), поэтому проверяем truthy значения
+  // SQLite возвращает числа (0/1) или null/undefined для новых полей, поэтому проверяем truthy значения
   const tasks = notes.filter(note => {
-    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
-    return note.is_task === true || note.is_task === 1
+    // SQLite может возвращать 0/1/null/undefined вместо boolean
+    const isTaskValue: any = note.is_task
+    // Проверяем все возможные варианты: true, 1, '1'
+    const isTask = isTaskValue === true || isTaskValue === 1 || String(isTaskValue) === '1'
+    if (isTask) {
+      console.log('Found task:', note.id, 'is_task:', isTaskValue, 'done:', note.done)
+    }
+    return Boolean(isTask)
   })
   const regularNotes = notes.filter(note => {
-    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
-    return !note.is_task || note.is_task === 0 || note.is_task === false
+    // SQLite может возвращать 0/1/null/undefined вместо boolean
+    const isTaskValue: any = note.is_task
+    // Если is_task null/undefined/0/false - это обычная заметка
+    const isTask = isTaskValue === true || isTaskValue === 1 || String(isTaskValue) === '1'
+    return !isTask
   })
   
   const incompleteTasks = tasks.filter(task => {
-    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
-    return !task.done || task.done === 0 || task.done === false
+    // SQLite может возвращать 0/1 вместо boolean
+    const isDoneValue: any = task.done
+    const isDone = isDoneValue === true || isDoneValue === 1 || String(isDoneValue) === '1'
+    return !isDone
   })
   const completedTasks = tasks.filter(task => {
-    // @ts-expect-error - SQLite может возвращать 0/1 вместо boolean
-    return task.done === true || task.done === 1
+    // SQLite может возвращать 0/1 вместо boolean
+    const isDoneValue: any = task.done
+    const isDone = isDoneValue === true || isDoneValue === 1 || String(isDoneValue) === '1'
+    return Boolean(isDone)
   })
 
   return (

@@ -156,12 +156,17 @@ export default function AppContent() {
                 )}
                 {(() => {
                     // Разделяем заметки на задачи и обычные заметки
+                    // SQLite возвращает числа (0/1) или null/undefined для новых полей
                     const tasks = notes.filter(note => {
-                        const isTask = note.is_task === true || note.is_task === 1 || String(note.is_task) === '1'
-                        return !!isTask
+                        const isTaskValue = note.is_task
+                        // Проверяем все возможные варианты: true, 1, '1'
+                        const isTask = isTaskValue === true || isTaskValue === 1 || String(isTaskValue) === '1'
+                        return Boolean(isTask)
                     })
                     const regularNotes = notes.filter(note => {
-                        const isTask = note.is_task === true || note.is_task === 1 || String(note.is_task) === '1'
+                        const isTaskValue = note.is_task
+                        // Если is_task null/undefined/0/false - это обычная заметка
+                        const isTask = isTaskValue === true || isTaskValue === 1 || String(isTaskValue) === '1'
                         return !isTask
                     })
                     
@@ -171,7 +176,7 @@ export default function AppContent() {
                     })
                     const completedTasks = tasks.filter(task => {
                         const isDone = task.done === true || task.done === 1 || String(task.done) === '1'
-                        return !!isDone
+                        return Boolean(isDone)
                     })
                     
                     return (
