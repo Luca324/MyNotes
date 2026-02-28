@@ -16,10 +16,10 @@ import { getDepthColor, getTextColor } from 'colorSchemes'
 import { AddCircle } from '@/components/Icons/AddCircle'
 import { Trash } from '@/components/Icons/Trash'
 import Modal from '@/components/Modal/Modal'
-import TopicContent from '@/components/TopicContent/TopicContent'
-import { useTopics } from '@/hooks/useNotes'
+import { useTopics, useNotes } from '@/hooks/useNotes'
 import TextInput from '@/shared/TextInput'
 import type { Topic as TopicType } from '@/types'
+import Note from '@/components/Note/Note'
 
 import { addTab } from '../../database/databaseService'
 import { AppContext } from '../AppProvider'
@@ -27,6 +27,34 @@ import { ChevronDown } from '../Icons/ChevronDown'
 import { ChevronUp } from '../Icons/ChevronUp'
 
 import { styles } from './Topic.styles'
+
+// Локальный компонент TopicContent для избежания require cycle
+function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic }: {
+  topic: TopicType
+  depth: number
+  subtopics: TopicType[]
+  deleteSubtopic: (id: number) => void
+}) {
+  const { id } = topic
+  const { notes, deleteNote } = useNotes(id)
+
+  return (
+    <View style={topicContentStyles.topicContent}>
+      {subtopics && subtopics.map(subtopic => (
+        <Topic topic={subtopic} deleteTopic={deleteSubtopic} key={subtopic.id} depth={depth + 1} />
+      ))}
+      {notes && notes.map(note => (
+        <Note key={note.id} note={note} topic={id} deleteNote={deleteNote} />
+      ))}
+    </View>
+  )
+}
+
+const topicContentStyles = StyleSheet.create({
+  topicContent: {
+    width: '100%',
+  },
+})
 
 interface TopicProps {
   topic: TopicType
@@ -94,7 +122,7 @@ export default function Topic({
       </TouchableOpacity>
 
       {isExpanded && (
-        <TopicContent
+        <TopicContentComponent
           topic={topic}
           subtopics={subtopics}
           deleteSubtopic={deleteSubtopic}

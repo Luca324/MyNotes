@@ -22,11 +22,6 @@ export default function TextInput({
   defaultValue = '',
   placeholder = '',
 }: TextInputProps) {
-  useMemo(() => {
-    // очищение при ререндере
-    setValue('')
-  }, [])
-
   return (
     <Input
       multiline={true}
