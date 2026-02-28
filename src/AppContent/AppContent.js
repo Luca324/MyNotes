@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 
 import { StyleSheet, Text, View, ScrollView, Pressable, Button} from 'react-native';
 
@@ -28,7 +28,7 @@ export default function AppContent() {
         }
     }, [keyboard.keyboardShown, keyboard.keyboardHeight]);
 
-    const { currentTopic, allTabs, setAllTabs } = useContext(AppContext)
+    const { currentTopic, allTabs, setAllTabs, setCurrentTopic } = useContext(AppContext)
     const { topics, setTopics, createTopic, deleteTopic, renameTopic } = useTopics(currentTopic)
 
     const [newTopicName, setNewTopicName] = useState('')
@@ -63,8 +63,68 @@ export default function AppContent() {
         setAllTabs(allTabs => [...allTabs, topic])
     }
 
+    // Создаем список всех доступных вкладок (включая "All")
+    const allAvailableTabs = [{ id: 0, name: 'All' }, ...(allTabs || [])]
+
+    // Находим текущую позицию в списке вкладок
+    const currentTabIndex = allAvailableTabs.findIndex(tab => tab.id === currentTopic)
+
+    // Функция для переключения на следующую/предыдущую вкладку
+    const switchToTab = (direction) => {
+        if (allAvailableTabs.length <= 1) return // Нет вкладок для переключения
+
+        let newIndex
+        if (direction === 'next') {
+            // Свайп влево - следующая вкладка
+            newIndex = currentTabIndex < allAvailableTabs.length - 1 ? currentTabIndex + 1 : 0
+        } else {
+            // Свайп вправо - предыдущая вкладка
+            newIndex = currentTabIndex > 0 ? currentTabIndex - 1 : allAvailableTabs.length - 1
+        }
+
+        const newTab = allAvailableTabs[newIndex]
+        if (newTab) {
+            setCurrentTopic(newTab.id)
+        }
+    }
+
+    // Обработчики для свайпов
+    const touchStartX = useRef(0)
+
+    const handleResponderGrant = (evt) => {
+        touchStartX.current = evt.nativeEvent.pageX
+    }
+
+    const handleResponderRelease = (evt, gestureState) => {
+        const deltaX = gestureState.dx
+        const deltaY = gestureState.dy
+        const swipeThreshold = 50 // Минимальное расстояние для свайпа
+
+        // Проверяем, что движение горизонтальное и достаточно большое
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+            if (deltaX > 0) {
+                // Свайп вправо - предыдущая вкладка
+                switchToTab('prev')
+            } else {
+                // Свайп влево - следующая вкладка
+                switchToTab('next')
+            }
+        }
+    }
+
     return (
-        <View style={styles.container}>
+        <View 
+            style={styles.container}
+            onStartShouldSetResponderCapture={() => false}
+            onMoveShouldSetResponderCapture={(evt, gestureState) => {
+                // Захватываем только горизонтальные движения
+                const isHorizontal = Math.abs(gestureState.dx) > Math.abs(gestureState.dy)
+                const isSignificant = Math.abs(gestureState.dx) > 10
+                return isHorizontal && isSignificant
+            }}
+            onResponderGrant={handleResponderGrant}
+            onResponderRelease={handleResponderRelease}
+        >
             <ScrollView
                 style={styles.tabsScroll}
                 contentContainerStyle={styles.tabsContainer}
@@ -78,17 +138,35 @@ export default function AppContent() {
                 )}
             </ScrollView>
 
-            <ScrollView
-                style={styles.scroll}
-                contentContainerStyle={[
-                    styles.scrollContent,
-                    {
-                        paddingBottom: bottomPadding + 80
-                    }
-                ]}
-                keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps="handled"
+            <View
+                style={styles.scrollContainer}
             >
+                <ScrollView
+                    style={styles.scroll}
+                    contentContainerStyle={[
+                        styles.scrollContent,
+                        {
+                            paddingBottom: bottomPadding + 80
+                        }
+                    ]}
+                    keyboardDismissMode="on-drag"
+                    keyboardShouldPersistTaps="handled"
+                    onTouchStart={handleResponderGrant}
+                    onTouchEnd={(evt) => {
+                        // Используем простой подход с координатами
+                        const touchEndX = evt.nativeEvent.pageX
+                        const deltaX = touchEndX - touchStartX.current
+                        const swipeThreshold = 50
+
+                        if (Math.abs(deltaX) > swipeThreshold) {
+                            if (deltaX > 0) {
+                                switchToTab('prev')
+                            } else {
+                                switchToTab('next')
+                            }
+                        }
+                    }}
+                >
                 {topics && Array.isArray(topics) ? (
                     topics.map(topic => (
                         <Topic key={topic.id} topic={topic} deleteTopic={deleteTopic} setAsTab={() => setAsTab(topic)} />
@@ -99,7 +177,8 @@ export default function AppContent() {
                 {notes && notes.map(note => (
                     <Note note={note} deleteNote={deleteNote} key={note.id} />
                 ))}
-            </ScrollView>
+                </ScrollView>
+            </View>
             
             <Pressable style={styles.createTopic} onPress={() => setCreateTopicModalVisible(true)}>
                 <FilePlus/>
@@ -151,6 +230,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         gap: 8,
         paddingHorizontal: 16,
+    },
+    scrollContainer: {
+        flex: 1,
+        width: "100%",
     },
     scroll: {
         flex: 1,

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useMemo } from 'react'
+import React, { useContext, useState, useEffect, useMemo } from 'react'
 
 import {
   StyleSheet,
@@ -29,20 +29,24 @@ import { ChevronUp } from '../Icons/ChevronUp'
 import { styles } from './Topic.styles'
 
 // Локальный компонент TopicContent для избежания require cycle
-function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic }: {
+function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpanded }: {
   topic: TopicType
   depth: number
   subtopics: TopicType[]
   deleteSubtopic: (id: number) => void
+  isExpanded: boolean
 }) {
   const { id } = topic
   const { notes, deleteNote, setNotes } = useNotes(id)
 
-  // Обновляем заметки при монтировании компонента (когда тема разворачивается)
+  // Обновляем заметки при монтировании компонента и при каждом разворачивании темы
+  // Это гарантирует, что новые заметки будут видны сразу после создания
   useEffect(() => {
-    getNotesForTopic(id).then(setNotes)
+    if (isExpanded) {
+      getNotesForTopic(id).then(setNotes)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [id, isExpanded])
 
   return (
     <View style={topicContentStyles.topicContent}>
@@ -134,6 +138,9 @@ export default function Topic({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded, id])
 
+  // Обновляем подтемы при каждом разворачивании темы (чтобы видеть новые подтемы)
+  // Это срабатывает каждый раз, когда тема разворачивается, включая после создания подтемы
+
   return (
     <View style={[styles.topic, { backgroundColor }]}>
       <TouchableOpacity
@@ -155,6 +162,7 @@ export default function Topic({
           subtopics={subtopics}
           deleteSubtopic={deleteSubtopic}
           depth={depth}
+          isExpanded={isExpanded}
         />
       )}
       <Modal modalVisible={modalVisible} setModalVisible={setModalVisible} onClose={() => setCreateSubtopicVisible(false)}>
@@ -219,6 +227,8 @@ export default function Topic({
                     setNewSubtopicName('')
                     setCreateSubtopicVisible(false)
                     setModalVisible(false)
+                    // Принудительно обновляем список подтем после создания
+                    getChildTopics(id).then(setSubtopics)
                     // TODO показать сообщение об успехе
                   })
                 }
