@@ -91,40 +91,30 @@ export default function AppContent() {
     // Обработчики для свайпов
     const touchStartX = useRef(0)
 
-    const handleResponderGrant = (evt) => {
+    const handleTouchStart = (evt) => {
         touchStartX.current = evt.nativeEvent.pageX
     }
 
-    const handleResponderRelease = (evt, gestureState) => {
-        const deltaX = gestureState.dx
-        const deltaY = gestureState.dy
+    const handleTouchEnd = (evt) => {
+        const touchEndX = evt.nativeEvent.pageX
+        const deltaX = touchEndX - touchStartX.current
         const swipeThreshold = 50 // Минимальное расстояние для свайпа
 
-        // Проверяем, что движение горизонтальное и достаточно большое
-        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+        if (Math.abs(deltaX) > swipeThreshold) {
             if (deltaX > 0) {
                 // Свайп вправо - предыдущая вкладка
+                console.log('Swipe right - previous tab')
                 switchToTab('prev')
             } else {
                 // Свайп влево - следующая вкладка
+                console.log('Swipe left - next tab')
                 switchToTab('next')
             }
         }
     }
 
     return (
-        <View 
-            style={styles.container}
-            onStartShouldSetResponderCapture={() => false}
-            onMoveShouldSetResponderCapture={(evt, gestureState) => {
-                // Захватываем только горизонтальные движения
-                const isHorizontal = Math.abs(gestureState.dx) > Math.abs(gestureState.dy)
-                const isSignificant = Math.abs(gestureState.dx) > 10
-                return isHorizontal && isSignificant
-            }}
-            onResponderGrant={handleResponderGrant}
-            onResponderRelease={handleResponderRelease}
-        >
+        <View style={styles.container}>
             <ScrollView
                 style={styles.tabsScroll}
                 contentContainerStyle={styles.tabsContainer}
@@ -151,21 +141,8 @@ export default function AppContent() {
                     ]}
                     keyboardDismissMode="on-drag"
                     keyboardShouldPersistTaps="handled"
-                    onTouchStart={handleResponderGrant}
-                    onTouchEnd={(evt) => {
-                        // Используем простой подход с координатами
-                        const touchEndX = evt.nativeEvent.pageX
-                        const deltaX = touchEndX - touchStartX.current
-                        const swipeThreshold = 50
-
-                        if (Math.abs(deltaX) > swipeThreshold) {
-                            if (deltaX > 0) {
-                                switchToTab('prev')
-                            } else {
-                                switchToTab('next')
-                            }
-                        }
-                    }}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
                 >
                 {topics && Array.isArray(topics) ? (
                     topics.map(topic => (
