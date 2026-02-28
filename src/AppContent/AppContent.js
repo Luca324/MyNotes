@@ -41,6 +41,13 @@ export default function AppContent() {
         if (currentTopic !== 0) getNotesForTopic(currentTopic).then(setNotes)
     }, [currentTopic])
 
+    // Очищаем поле при открытии модального окна
+    useEffect(() => {
+        if (createTopicModalVisible) {
+            setNewTopicName('')
+        }
+    }, [createTopicModalVisible])
+
     function setAsTab(topic) {
         console.log('new tab:', topic)
         setAllTabs(allTabs => [...allTabs, topic])
@@ -106,7 +113,14 @@ export default function AppContent() {
                 />
                 <Button
                     title="create topic"
-                    onPress={() => newTopicName && createTopic(currentTopic, newTopicName)}
+                    onPress={() => {
+                        if (newTopicName) {
+                            createTopic(currentTopic, newTopicName).then(() => {
+                                setNewTopicName('')
+                                setCreateTopicModalVisible(false)
+                            })
+                        }
+                    }}
                 />
             </Modal>}
         </View>

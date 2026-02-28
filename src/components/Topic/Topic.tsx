@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState, useEffect } from 'react'
 
 import {
   StyleSheet,
@@ -82,6 +82,13 @@ export default function Topic({
 
   const [createSubtopicVisible, setCreateSubtopicVisible] =
     useState<boolean>(false)
+
+  // Очищаем поле при открытии формы создания подтемы
+  useEffect(() => {
+    if (createSubtopicVisible) {
+      setNewSubtopicName('')
+    }
+  }, [createSubtopicVisible])
 
   const onPress = () => {
     setIsExpanded(!isExpanded)
@@ -171,10 +178,16 @@ export default function Topic({
             />
 
             <Pressable
-              onPress={() => createSubtopic(id, newSubtopicName).then(() => {
-                setModalVisible(false)
-                // TODO показать сообщение об успехе
-              })}
+              onPress={() => {
+                if (newSubtopicName) {
+                  createSubtopic(id, newSubtopicName).then(() => {
+                    setNewSubtopicName('')
+                    setCreateSubtopicVisible(false)
+                    setModalVisible(false)
+                    // TODO показать сообщение об успехе
+                  })
+                }
+              }}
               style={styles.readyButton}
             >
               <Text>Готово</Text>
