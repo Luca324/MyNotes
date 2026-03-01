@@ -168,6 +168,14 @@ export const deleteNote = async (noteId: number): Promise<void> => {
   return result.lastInsertRowId
 }
 
+export const updateTopic = async (
+  topicId: number,
+  newName: string
+): Promise<void> => {
+  const query = `UPDATE topics SET name = ? WHERE id = ?;`
+  await executeQuery(query, [newName, topicId])
+}
+
 export const deleteTopic = async (topicId: number): Promise<void> => {
   const query = `DELETE FROM topics WHERE id = ?;`
   const result = await executeQuery(query, [topicId])

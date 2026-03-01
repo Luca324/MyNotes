@@ -29,9 +29,11 @@ export const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 8,
     gap: 8,
     height: 36,
+    paddingHorizontal: 4,
   },
   btn: {
     width: 24,
@@ -42,11 +44,12 @@ export const styles = StyleSheet.create({
   },
   input: {
     padding: 10,
-    width: '70%',
+    flex: 1,
     backgroundColor: '#F4F4F4',
     borderWidth: 0,
     borderRadius: 8,
     height: 36,
+    minWidth: 0,
   },
   horizontal: {
     flexDirection: 'row',
@@ -55,17 +58,19 @@ export const styles = StyleSheet.create({
   },
   modalButton: {
     backgroundColor: 'white',
-    width: 250,
+    width: '100%',
     alignItems: 'center',
     color: 'black',
     padding: 4,
   },
   readyButton: {
-    backgroundColor: '#a5b4fc',
+    backgroundColor: '#818cf8',
     height: 36,
     borderRadius: 8,
-
     padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 80,
   },
   underline: {
     // borderBottomColor: 'black',

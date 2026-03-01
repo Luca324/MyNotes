@@ -244,22 +244,39 @@ export default function AppContent() {
             </>}
 
             {createTopicModalVisible && <Modal modalVisible={createTopicModalVisible} setModalVisible={setCreateTopicModalVisible}>
-                <TextInput
-                    style={styles.inputContainer}
-                    value={newTopicName}
-                    setValue={setNewTopicName}
-                />
-                <Button
-                    title="create topic"
-                    onPress={() => {
-                        if (newTopicName) {
-                            createTopic(currentTopic, newTopicName).then(() => {
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Создать тему</Text>
+                    <TextInput
+                        value={newTopicName}
+                        setValue={setNewTopicName}
+                        styles={styles.modalInput}
+                        placeholder="Название темы"
+                    />
+                    <View style={styles.modalButtons}>
+                        <Pressable
+                            style={styles.modalCancelButton}
+                            onPress={() => {
                                 setNewTopicName('')
                                 setCreateTopicModalVisible(false)
-                            })
-                        }
-                    }}
-                />
+                            }}
+                        >
+                            <Text style={styles.modalCancelText}>Отмена</Text>
+                        </Pressable>
+                        <Pressable
+                            style={styles.modalConfirmButton}
+                            onPress={() => {
+                                if (newTopicName && newTopicName.trim()) {
+                                    createTopic(currentTopic, newTopicName.trim()).then(() => {
+                                        setNewTopicName('')
+                                        setCreateTopicModalVisible(false)
+                                    })
+                                }
+                            }}
+                        >
+                            <Text style={styles.modalConfirmText}>Создать</Text>
+                        </Pressable>
+                    </View>
+                </View>
             </Modal>}
         </View>
     );
@@ -348,5 +365,53 @@ const styles = StyleSheet.create({
         color: '#666',
         marginBottom: 8,
         paddingHorizontal: 4,
+    },
+    modalContent: {
+        width: '100%',
+        padding: 16,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: '#333',
+        marginBottom: 16,
+        textAlign: 'center',
+    },
+    modalInput: {
+        backgroundColor: '#F4F4F4',
+        borderWidth: 0,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 16,
+        fontSize: 16,
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: 12,
+    },
+    modalCancelButton: {
+        flex: 1,
+        backgroundColor: '#f0f0f0',
+        borderRadius: 8,
+        padding: 12,
+        alignItems: 'center',
+    },
+    modalCancelText: {
+        color: '#666',
+        fontSize: 16,
+        fontWeight: '500',
+    },
+    modalConfirmButton: {
+        flex: 1,
+        backgroundColor: '#818cf8',
+        borderRadius: 8,
+        padding: 12,
+        alignItems: 'center',
+    },
+    modalConfirmText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: '500',
     },
 });

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MyNotes",
-    "slug": "MyHabits",
+    "name": "Plan It",
+    "slug": "PlanIt",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,6 +17,7 @@
       "bundleIdentifier": "com.tatyana000.MyNotes"
     },
     "android": {
+      "icon": "./assets/icon.png",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,7 +27,7 @@
         "INTERNET",
         "ACCESS_NETWORK_STATE"
       ],
-      "package": "com.tatyana000.MyNotes"
+      "package": "com.tatyana000.PlanIt"
     },
     "web": {
       "favicon": "./assets/favicon.png"

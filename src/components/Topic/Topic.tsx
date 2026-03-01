@@ -211,6 +211,9 @@ export default function Topic({
 
   const [createSubtopicVisible, setCreateSubtopicVisible] =
     useState<boolean>(false)
+  const [renameTopicVisible, setRenameTopicVisible] =
+    useState<boolean>(false)
+  const [newTopicName, setNewTopicName] = useState<string>(name)
 
   // Очищаем поле при открытии формы создания подтемы
   useEffect(() => {
@@ -218,6 +221,13 @@ export default function Topic({
       setNewSubtopicName('')
     }
   }, [createSubtopicVisible])
+
+  // Устанавливаем текущее имя темы при открытии формы переименования
+  useEffect(() => {
+    if (renameTopicVisible) {
+      setNewTopicName(name)
+    }
+  }, [renameTopicVisible, name])
 
   const onPress = () => {
     setIsExpanded(!isExpanded)
@@ -246,9 +256,13 @@ export default function Topic({
     topics: subtopics,
     createTopic: createSubtopic,
     deleteTopic: deleteSubtopic,
+    renameTopic: renameSubtopic,
     setTopics: setSubtopics,
   } = useTopics(id)
   const [newSubtopicName, setNewSubtopicName] = useState('')
+  
+  // Для переименования текущей темы используем родительский useTopics
+  const { renameTopic: renameCurrentTopic } = useTopics(topic.parent_id || 0)
   
   // Обновляем подтемы при разворачивании темы
   useEffect(() => {
@@ -285,10 +299,47 @@ export default function Topic({
           isExpanded={isExpanded}
         />
       )}
-      <Modal modalVisible={modalVisible} setModalVisible={setModalVisible} onClose={() => setCreateSubtopicVisible(false)}>
+      <Modal modalVisible={modalVisible} setModalVisible={setModalVisible} onClose={() => {
+        setCreateSubtopicVisible(false)
+        setRenameTopicVisible(false)
+      }}>
         <Pressable onPress={deleteTopicAndTab} style={styles.modalButton}>
           <Text>Удалить</Text>
         </Pressable>
+        <Pressable
+          onPress={() => setRenameTopicVisible(!renameTopicVisible)}
+          style={styles.modalButton}
+        >
+          <Text style={renameTopicVisible && styles.underline}>
+            Переименовать
+          </Text>
+        </Pressable>
+        {renameTopicVisible && (
+          <View style={styles.inputContainer}>
+            <TextInput
+              value={newTopicName}
+              setValue={setNewTopicName}
+              styles={styles.input}
+            />
+            <Pressable
+              onPress={() => {
+                if (newTopicName && newTopicName.trim()) {
+                  renameCurrentTopic(id, newTopicName.trim()).then(() => {
+                    // Обновляем вкладки, если тема закреплена
+                    if (isTab) {
+                      getAllTabs().then(setAllTabs)
+                    }
+                    setRenameTopicVisible(false)
+                    setModalVisible(false)
+                  })
+                }
+              }}
+              style={styles.readyButton}
+            >
+              <Text style={{ color: 'white', fontWeight: '500' }}>Готово</Text>
+            </Pressable>
+          </View>
+        )}
         {isTab ? (
           <Pressable
             onPress={() => {
@@ -363,7 +414,7 @@ export default function Topic({
               }}
               style={styles.readyButton}
             >
-              <Text>Готово</Text>
+              <Text style={{ color: 'white', fontWeight: '500' }}>Готово</Text>
             </Pressable>
           </View>
         )}

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import {
   createTopic as createTopicDB,
   deleteTopic as deleteTopicDB,
+  updateTopic as updateTopicDB,
   createNote as createNoteDB,
   updateNote as updateNoteDB,
   deleteNote as deleteNoteDB,
@@ -46,11 +47,12 @@ export function useTopics(parentTopicId: number = 0, init: Topic[] = []) {
     })
   }
 
-  function renameTopic(topicId: number, newName: string) {
-    const newTopics = topics.map((topic) =>
-      topic.id === topicId ? { ...topic, name: newName } : topic
-    )
-    setTopics(newTopics)
+  async function renameTopic(topicId: number, newName: string) {
+    return updateTopicDB(topicId, newName).then(async () => {
+      // Перезагружаем список подтем из БД для актуальности данных
+      const updatedTopics = await getChildTopics(parentTopicId)
+      setTopics(updatedTopics)
+    })
   }
 
   return { topics, setTopics, createTopic, deleteTopic, renameTopic }
