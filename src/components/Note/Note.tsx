@@ -39,13 +39,13 @@ export default function Note({ note, deleteNote, topicId }: NoteProps) {
           <View style={styles.note}>
             <View style={styles.header}>
               {/* <Text style={styles.id}>id: {note.id}</Text> */}
+              <Text style={styles.date}>{formatDate(note.created_at)}</Text>
               <Pressable onPress={openNoteSettings}>
                 <MoreVertical />
               </Pressable>
             </View>
             {note.title && <Text style={styles.title}>{note.title}</Text>}
             {note.content && <Text>{note.content}</Text>}
-            <Text style={styles.date}>{formatDate(note.created_at)}</Text>
           </View>
         </Pressable>
       </Link>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     alignItems: 'center',
     gap: 8,
   },
@@ -86,7 +86,6 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     color: '#666',
-    marginTop: 4,
   },
   modalButton: {
     backgroundColor: 'white',

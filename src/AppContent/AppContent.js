@@ -285,16 +285,7 @@ export default function AppContent() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#F4F4F4', // Текущий - светло-серый
-        // backgroundColor: '#FAFAFA', // Вариант 2 - почти белый
-        // backgroundColor: '#F0F0F0', // Вариант 3 - светло-серый
-        // backgroundColor: '#E8E8E8', // Вариант 4 - серый
-        // backgroundColor: '#F5F5F5', // Вариант 5 - светло-серый
-        // backgroundColor: '#FFFFFF', // Вариант 6 - белый
-        // backgroundColor: '#F8F8F8', // Вариант 7 - очень светло-серый
-        // backgroundColor: '#EEEEEE', // Вариант 8 - светло-серый
-        // backgroundColor: '#F9F9F9', // Вариант 9 - почти белый
-        // backgroundColor: '#E5E5E5', // Вариант 10 - серый
+        backgroundColor: '#F5F5F5',
         marginTop: 36,
     },
     tabsScroll: {
