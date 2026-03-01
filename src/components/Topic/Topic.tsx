@@ -1,4 +1,6 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react'
+import React, { useContext, useState, useEffect, useMemo, useCallback } from 'react'
+
+import { Link, useFocusEffect } from 'expo-router'
 
 import {
   StyleSheet,
@@ -9,7 +11,6 @@ import {
   Button,
 } from 'react-native'
 
-import { Link } from 'expo-router'
 
 import { getDepthColor, getTextColor } from 'colorSchemes'
 
@@ -91,6 +92,16 @@ function TopicContentComponent({ topic, depth, subtopics, deleteSubtopic, isExpa
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isExpanded])
+
+  // Обновляем заметки при возврате на экран (например, после закрытия редактора заметок)
+  useFocusEffect(
+    React.useCallback(() => {
+      if (isExpanded) {
+        getNotesForTopic(id).then(setNotes)
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isExpanded])
+  )
 
   // Разделяем заметки на задачи и обычные заметки
   // SQLite возвращает числа (0/1) или null/undefined для новых полей, поэтому проверяем truthy значения
@@ -204,8 +215,16 @@ export default function Topic({
   const backgroundColor = getDepthColor(depth)
   const color = getTextColor(depth)
 
-  const { id, name } = topic
+  const { id } = topic
   const { allTabs, setAllTabs } = useContext(AppContext)
+
+  // Локальное состояние для имени темы, чтобы обновлять его при переименовании
+  const [topicName, setTopicName] = useState<string>(topic.name)
+
+  // Обновляем локальное имя при изменении пропса topic
+  useEffect(() => {
+    setTopicName(topic.name)
+  }, [topic.name])
 
   const [isExpanded, setIsExpanded] = useState<boolean>(false)
 
@@ -213,7 +232,7 @@ export default function Topic({
     useState<boolean>(false)
   const [renameTopicVisible, setRenameTopicVisible] =
     useState<boolean>(false)
-  const [newTopicName, setNewTopicName] = useState<string>(name)
+  const [newTopicName, setNewTopicName] = useState<string>(topic.name)
 
   // Очищаем поле при открытии формы создания подтемы
   useEffect(() => {
@@ -225,9 +244,9 @@ export default function Topic({
   // Устанавливаем текущее имя темы при открытии формы переименования
   useEffect(() => {
     if (renameTopicVisible) {
-      setNewTopicName(name)
+      setNewTopicName(topicName)
     }
-  }, [renameTopicVisible, name])
+  }, [renameTopicVisible, topicName])
 
   const onPress = () => {
     setIsExpanded(!isExpanded)
@@ -272,6 +291,16 @@ export default function Topic({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded, id])
 
+  // Обновляем подтемы при возврате на экран (например, после создания подтемы)
+  useFocusEffect(
+    useCallback(() => {
+      if (isExpanded) {
+        getChildTopics(id).then(setSubtopics)
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [id, isExpanded])
+  )
+
   // Обновляем подтемы при каждом разворачивании темы (чтобы видеть новые подтемы)
   // Это срабатывает каждый раз, когда тема разворачивается, включая после создания подтемы
 
@@ -283,7 +312,7 @@ export default function Topic({
         onLongPress={openTopicSettings}
         style={styles.topicHeader}
       >
-        <Text style={[styles.nameText, { color }]}>{name}</Text>
+        <Text style={[styles.nameText, { color }]}>{topicName}</Text>
         <View style={styles.horizontal}>
           {/* <Text style={styles.idText}>id: {id}</Text> */}
           {isExpanded ? <ChevronUp /> : <ChevronDown />}
@@ -325,6 +354,8 @@ export default function Topic({
               onPress={() => {
                 if (newTopicName && newTopicName.trim()) {
                   renameCurrentTopic(id, newTopicName.trim()).then(() => {
+                    // Обновляем локальное имя темы сразу
+                    setTopicName(newTopicName.trim())
                     // Обновляем вкладки, если тема закреплена
                     if (isTab) {
                       getAllTabs().then(setAllTabs)
@@ -406,6 +437,10 @@ export default function Topic({
                     setNewSubtopicName('')
                     setCreateSubtopicVisible(false)
                     setModalVisible(false)
+                    // Разворачиваем тему, чтобы показать новую подтему
+                    if (!isExpanded) {
+                      setIsExpanded(true)
+                    }
                     // Принудительно обновляем список подтем после создания
                     getChildTopics(id).then(setSubtopics)
                     // TODO показать сообщение об успехе
