@@ -182,14 +182,14 @@ const completedTasksStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'transparent',
     borderRadius: 8,
     marginVertical: 4,
   },
   headerText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#666',
+    color: '#000',
   },
   content: {
     width: '100%',
