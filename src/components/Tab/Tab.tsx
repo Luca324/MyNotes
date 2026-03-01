@@ -72,6 +72,7 @@ export default function Tab({ tab, deleteTopic: deleteTopicProp }: TabProps) {
         style={styles.container}
         onPress={() => setCurrentTopic(tab.id)}
         onLongPress={openTabSettings}
+        delayLongPress={350}
       >
         <Text style={[isActive && styles.active]}>{tab.name}</Text>
       </Pressable>

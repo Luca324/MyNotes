@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     gap: 12,
   },
   checkboxContainer: {
-    // Убрали marginTop для выравнивания по центру
+    // Выравнивание по центру через alignItems: 'center' в task
   },
   checkbox: {
     width: 24,
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: 8,
   },
   taskText: {

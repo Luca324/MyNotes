@@ -1,7 +1,5 @@
 import React, { useContext, useState, useEffect, useMemo, useCallback } from 'react'
 
-import { Link, useFocusEffect } from 'expo-router'
-
 import {
   StyleSheet,
   Text,
@@ -10,6 +8,8 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native'
+
+import { Link, useFocusEffect } from 'expo-router'
 
 
 import { getDepthColor, getTextColor } from 'colorSchemes'
@@ -312,6 +312,7 @@ export default function Topic({
           activeOpacity={0.8}
           style={styles.topicNameContainer}
           onLongPress={openTopicSettings}
+          delayLongPress={350}
         >
           <Text style={[styles.nameText, { color }]}>{topicName}</Text>
         </TouchableOpacity>
@@ -332,7 +333,7 @@ export default function Topic({
                 <Text style={styles.createTaskIcon}>✓</Text>
               </Pressable>
             </Link>
-          <Pressable onPress={onPress} onLongPress={openTopicSettings}>
+          <Pressable onPress={onPress} onLongPress={openTopicSettings} delayLongPress={350}>
             {/* <Text style={styles.idText}>id: {id}</Text> */}
             {isExpanded ? <ChevronUp /> : <ChevronDown />}
           </Pressable>

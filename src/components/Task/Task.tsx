@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     padding: 10,
     elevation: 3,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 12,
   },
   checkboxContainer: {
