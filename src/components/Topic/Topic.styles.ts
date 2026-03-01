@@ -18,19 +18,30 @@ export const styles = StyleSheet.create({
     marginVertical: 8,
     gap: 8,
   },
+  topicHeaderSubtopic: {
+    marginVertical: 2,
+  },
   topicNameContainer: {
     flex: 1,
   },
+  createButtonPressable: {
+    padding: 4,
+    minWidth: 24,
+    minHeight: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
+  },
   createNoteIcon: {
     color: '#666',
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '400',
     textAlign: 'center',
     includeFontPadding: false,
   },
   createTaskIcon: {
     color: '#666',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '400',
     textAlign: 'center',
     includeFontPadding: false,
@@ -40,7 +51,7 @@ export const styles = StyleSheet.create({
     color: '#666',
   },
   nameText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#333',
   },
@@ -72,7 +83,7 @@ export const styles = StyleSheet.create({
   horizontal: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
   },
   modalButton: {
     backgroundColor: 'white',

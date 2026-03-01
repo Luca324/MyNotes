@@ -20,8 +20,8 @@ export const styles = StyleSheet.create({
     // Выравнивание по центру через alignItems: 'center' в task
   },
   checkbox: {
-    width: 24,
-    height: 24,
+    width: 20,
+    height: 20,
     borderWidth: 2,
     borderColor: '#818cf8',
     borderRadius: 4,
@@ -34,9 +34,9 @@ export const styles = StyleSheet.create({
   },
   checkmark: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
-    lineHeight: 16,
+    lineHeight: 14,
     textAlign: 'center',
     includeFontPadding: false,
     textAlignVertical: 'center',

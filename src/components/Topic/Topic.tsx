@@ -304,9 +304,14 @@ export default function Topic({
   // Обновляем подтемы при каждом разворачивании темы (чтобы видеть новые подтемы)
   // Это срабатывает каждый раз, когда тема разворачивается, включая после создания подтемы
 
+  // Уменьшаем padding для подтем (depth > 0)
+  const headerStyle = depth > 0 
+    ? [styles.topicHeader, styles.topicHeaderSubtopic]
+    : styles.topicHeader
+
   return (
     <View style={[styles.topic, { backgroundColor }]}>
-      <View style={styles.topicHeader}>
+      <View style={headerStyle}>
         <TouchableOpacity
           onPress={onPress}
           activeOpacity={0.8}
@@ -321,7 +326,7 @@ export default function Topic({
               href={{ pathname: '/noteEditor', params: { topicId: id } }}
               asChild
             >
-              <Pressable>
+              <Pressable style={styles.createButtonPressable}>
                 <Text style={styles.createNoteIcon}>+</Text>
               </Pressable>
             </Link>
@@ -329,7 +334,7 @@ export default function Topic({
               href={{ pathname: '/noteEditor', params: { topicId: id, isTask: 'true' } }}
               asChild
             >
-              <Pressable>
+              <Pressable style={styles.createButtonPressable}>
                 <Text style={styles.createTaskIcon}>✓</Text>
               </Pressable>
             </Link>
