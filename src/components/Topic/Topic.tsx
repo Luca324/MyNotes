@@ -306,18 +306,38 @@ export default function Topic({
 
   return (
     <View style={[styles.topic, { backgroundColor }]}>
-      <TouchableOpacity
-        onPress={onPress}
-        activeOpacity={0.8}
-        onLongPress={openTopicSettings}
-        style={styles.topicHeader}
-      >
-        <Text style={[styles.nameText, { color }]}>{topicName}</Text>
+      <View style={styles.topicHeader}>
+        <TouchableOpacity
+          onPress={onPress}
+          activeOpacity={0.8}
+          style={styles.topicNameContainer}
+          onLongPress={openTopicSettings}
+        >
+          <Text style={[styles.nameText, { color }]}>{topicName}</Text>
+        </TouchableOpacity>
         <View style={styles.horizontal}>
-          {/* <Text style={styles.idText}>id: {id}</Text> */}
-          {isExpanded ? <ChevronUp /> : <ChevronDown />}
+            <Link
+              href={{ pathname: '/noteEditor', params: { topicId: id } }}
+              asChild
+            >
+              <Pressable>
+                <Text style={styles.createNoteIcon}>+</Text>
+              </Pressable>
+            </Link>
+            <Link
+              href={{ pathname: '/noteEditor', params: { topicId: id, isTask: 'true' } }}
+              asChild
+            >
+              <Pressable>
+                <Text style={styles.createTaskIcon}>✓</Text>
+              </Pressable>
+            </Link>
+          <Pressable onPress={onPress} onLongPress={openTopicSettings}>
+            {/* <Text style={styles.idText}>id: {id}</Text> */}
+            {isExpanded ? <ChevronUp /> : <ChevronDown />}
+          </Pressable>
         </View>
-      </TouchableOpacity>
+      </View>
 
       {isExpanded && (
         <TopicContentComponent
@@ -397,23 +417,6 @@ export default function Topic({
             <Text>Закрепить</Text>
           </Pressable>
         )}
-        <Link
-          href={{ pathname: '/noteEditor', params: { topicId: id } }}
-          asChild
-        >
-          <Pressable style={styles.modalButton}>
-            <Text>Добавить заметку</Text>
-          </Pressable>
-        </Link>
-        <Link
-          href={{ pathname: '/noteEditor', params: { topicId: id, isTask: 'true' } }}
-          asChild
-        >
-          <Pressable style={styles.modalButton}>
-            <Text>Добавить задачу</Text>
-          </Pressable>
-        </Link>
-
         <Pressable
           onPress={() => setCreateSubtopicVisible(!createSubtopicVisible)}
           style={styles.modalButton}

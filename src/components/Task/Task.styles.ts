@@ -13,11 +13,11 @@ export const styles = StyleSheet.create({
     padding: 10,
     elevation: 3,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: 12,
   },
   checkboxContainer: {
-    marginTop: 2,
+    // Убрали marginTop для выравнивания по центру
   },
   checkbox: {
     width: 24,
@@ -36,6 +36,10 @@ export const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    lineHeight: 16,
+    textAlign: 'center',
+    includeFontPadding: false,
+    textAlignVertical: 'center',
   },
   taskContent: {
     flex: 1,
